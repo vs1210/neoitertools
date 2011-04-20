@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.ericaro</groupId>
   <artifactId>neoitertools</artifactId>
-  <version>1.0.0-beta-1</version>
+  <version>1.0.0-SNAPSHOT</version>
 <description>Annotations based Documentation</description>
 
 	<dependencies>
@@ -65,9 +65,9 @@
 	</profiles>
 
 	<scm>
-		<connection>scm:svn:https://neoitertools.googlecode.com/svn/tags/neoitertools-1.0.0-beta-1</connection>
-		<developerConnection>scm:svn:https://neoitertools.googlecode.com/svn/tags/neoitertools-1.0.0-beta-1</developerConnection>
-		<url>http://neoitertools.googlecode.com/svn/tags/neoitertools-1.0.0-beta-1</url>
+		<connection>scm:svn:https://neoitertools.googlecode.com/svn/trunk/neoitertools</connection>
+		<developerConnection>scm:svn:https://neoitertools.googlecode.com/svn/trunk/neoitertools</developerConnection>
+		<url>http://neoitertools.googlecode.com/svn/trunk/neoitertools</url>
 	</scm>
 	<licenses>
 		<license>
