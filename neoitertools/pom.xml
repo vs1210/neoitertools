@@ -142,6 +142,7 @@
 						<goals>deploy</goals>
 						<arguments>-Prelease,deploy</arguments>
 						<autoVersionSubmodules>true</autoVersionSubmodules>
+						<mavenExecutorId>forked-path</mavenExecutorId>
 					</configuration>
 				</plugin>
 				<plugin>
