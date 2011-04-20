@@ -3,7 +3,8 @@
   <groupId>net.ericaro</groupId>
   <artifactId>neoitertools</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-<description>Annotations based Documentation</description>
+  <name>neoitertools</name>
+<description>itertools power to java</description>
 
 	<dependencies>
 		<dependency>
@@ -78,7 +79,7 @@
 	</licenses>
 	<developers>
 		<developer>
-			<name>ericaro</name>
+			<name>eric</name>
 			<email>eric@ericaro.net</email>
 			<organization>Personal</organization>
 			<roles>
