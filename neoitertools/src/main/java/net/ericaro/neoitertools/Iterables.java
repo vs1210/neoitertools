@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.ericaro.neoitertools.Iterators.EmptyIterator;
+import net.ericaro.neoitertools.combinatorics.Combinatorics;
 
 /** <p>This module implements a number of iterable building blocks inspired by constructs from the Python programming languages. 
  * Each has been recast in a form suitable for Java.</p>
@@ -129,6 +130,29 @@ public class Iterables {
 
 	}
 
+	/**
+	 * Return r length subsequences of elements from the input iterable.
+	 * 
+	 * Combinations are emitted in lexicographic sort order. So, if the input
+	 * iterable is sorted, the combination tuples will be produced in sorted
+	 * order.
+	 * 
+	 * Elements are treated as unique based on their position, not on their
+	 * value. So if the input elements are unique, there will be no repeat
+	 * values in each combination.
+	 * 
+	 * @param iterable
+	 * @param r size of returned tuples
+	 * @return iterable over combinations as list
+	 */
+	public static <T> Iterable<List<T>> combinations(final Iterable<T> iterable, final int r) {
+		return new Iterable<List<T>>() {
+			public Iterator<List<T>> iterator() {
+				return Iterators.combinations(iterable.iterator(), r);
+			}
+		};
+	}
+	
 	/**
 	 * equivalent to count(0)
 	 * 
@@ -252,6 +276,21 @@ public class Iterables {
 			
 			public Iterator<Character> iterator() {
 				return Iterators.iter(s);
+			}
+		};
+	}
+	
+	/** return a single usage iterable over this iterator
+	 * 
+	 * @param <T>
+	 * @param iterator
+	 * @return
+	 */
+	public static <T> Iterable<T> in(final Iterator<T> iterator) {
+		return new Iterable<T>() {
+			
+			public Iterator<T> iterator() {
+				return iterator;
 			}
 		};
 	}
@@ -423,6 +462,51 @@ public class Iterables {
 		};
 	}
 
+	/** Return successive full length permutations of elements in the iterator.
+	 * 
+	 * 
+	 * Permutations are emitted in lexicographic sort order. So, if the input
+	 * iterable is sorted, the permutation list will be produced in sorted
+	 * order.
+	 * 
+	 * Elements are treated as unique based on their position, not on their
+	 * value. So if the input elements are unique, there will be no repeat
+	 * values in each permutation.
+	 * 
+	 * @param iterable
+	 * @return iterable of permuted list
+	 */
+	public static <T> Iterable<List<T>> permutations(final Iterable<T> iterable) {
+		return new Iterable<List<T>>() {
+			public Iterator<List<T>> iterator() {return Iterators.permutations(iterable.iterator());}
+			
+		};
+	}
+
+	/**
+	 * Return successive r-length permutations of elements in the iterable.
+	 * 
+	 * Permutations are emitted in lexicographic sort order. So, if the input
+	 * iterable is sorted, the permutation list will be produced in sorted
+	 * order.
+	 * 
+	 * Elements are treated as unique based on their position, not on their
+	 * value. So if the input elements are unique, there will be no repeat
+	 * values in each permutation.
+	 * 
+	 * @param iterable
+	 * @param r
+	 * @return
+	 */
+	public static <T> Iterable<List<T>> permutations(final Iterable<T> iterable, final int r) {
+		return new Iterable<List<T>>() {
+			public Iterator<List<T>> iterator() {return Iterators.permutations(iterable.iterator(), r);}
+			
+		};
+	
+	}
+
+	
 	/**
 	 * equivalent to
 	 * 
