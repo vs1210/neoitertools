@@ -1,22 +1,10 @@
 package net.ericaro.neoitertools;
 
-import static net.ericaro.neoitertools.Iterators.chain;
-import static net.ericaro.neoitertools.Iterators.dropwhile;
-import static net.ericaro.neoitertools.Iterators.filter;
-import static net.ericaro.neoitertools.Iterators.iter;
-import static net.ericaro.neoitertools.Iterators.list;
-import static net.ericaro.neoitertools.Iterators.map;
-import static net.ericaro.neoitertools.Iterators.range;
-import static net.ericaro.neoitertools.Iterators.reduce;
-import static net.ericaro.neoitertools.Iterators.sorted;
-import static net.ericaro.neoitertools.Iterators.string;
-import static net.ericaro.neoitertools.Iterators.tuple;
-import static net.ericaro.neoitertools.Iterators.zip;
+import static net.ericaro.neoitertools.Itertools.*;
 
 import java.util.Arrays;
 import java.util.List;
 
-import net.ericaro.neoitertools.iterators.SingletonIterator;
 
 import org.junit.Test;
 
@@ -65,23 +53,17 @@ public class IteratorsTest {
 		assert "ABCDEF".equals(str);
 	}
 
-	@Test
-	public void testSingleton() {
-		List<String> list = list(new SingletonIterator<String>("S"));
-		assert list.size() == 1;
-		assert "S".equals(list.get(0));
-	}
 
 	@Test
 	public void testDropWhile() {
 
-		String str = string(dropwhile(iter("ABCabc"),
-				new Predicate<Character>() {
+		String str = string(dropwhile(
+				new Lambda<Character,Boolean>() {
 					public Boolean map(Character t) {
 						return Character.isUpperCase(t);
 					}
 
-				}));
+				},iter("ABCabc")));
 		assert "abc".equals(str);
 
 	}
@@ -89,7 +71,7 @@ public class IteratorsTest {
 	@Test
 	public void testMap() {
 
-		String str = string(map(new Mapper<Character, Character>() {
+		String str = string(map(new Lambda<Character, Character>() {
 			public Character map(Character arg) {
 				return Character.toUpperCase(arg);
 			}
@@ -101,19 +83,19 @@ public class IteratorsTest {
 
 	@Test
 	public void testZip() {
-		List<Couple<Character, Character>> list = tuple(zip(iter("abcdef"),
+		List<Pair<Character, Character>> list = tuple(zip(iter("abcdef"),
 				iter("123456789")));
 
 		List<String> strings = list(map(
-				new Mapper<Couple<Character, Character>, String>() {
+				new Lambda<Pair<Character, Character>, String>() {
 
-					public String map(Couple<Character, Character> arg) {
+					public String map(Pair<Character, Character> arg) {
 						StringBuilder sb = new StringBuilder();
 						sb.append(arg.f0).append(arg.f1);
 						return sb.toString();
 					}
 
-				}, list.iterator()));
+				}, iter(list)));
 
 		int i = 0;
 		assert strings.get(i++).equals("a1");
@@ -129,8 +111,8 @@ public class IteratorsTest {
 	@Test
 	public void testSorted() {
 		List<String> list = Arrays.asList("a", "aa", "bbb", "ccc", "d");
-		List<String> sorted = list(sorted(list.iterator(),
-				new Mapper<String, Integer>() {
+		List<String> sorted = list(sorted(iter(list),
+				new Lambda<String, Integer>() {
 					public Integer map(String arg) {
 						return arg.length();
 					}
@@ -144,24 +126,7 @@ public class IteratorsTest {
 		assert sorted.size() == 5;
 	}
 
-	@Test
-	public void testFilter() throws Exception {
-
-		List<Integer> list = list(filter(new Predicate<Integer>() {
-			public Boolean map(Integer t) {
-				return t % 2 == 0;
-			}
-
-		}, range(10)));
-		int i = 0;
-		assert list.get(i++) == 0;
-		assert list.get(i++) == 2;
-		assert list.get(i++) == 4;
-		assert list.get(i++) == 6;
-		assert list.get(i++) == 8;
-		assert list.size() == 5;
-
-	}
+	
 
 	@Test
 	public void testReduce() {
