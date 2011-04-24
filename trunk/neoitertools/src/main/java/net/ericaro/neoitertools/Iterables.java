@@ -8,19 +8,30 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.ericaro.neoitertools.Iterators.EmptyIterator;
-import net.ericaro.neoitertools.combinatorics.Combinatorics;
+import net.ericaro.neoitertools.iterators.CycleIterator;
+import net.ericaro.neoitertools.iterators.GroupByIterator;
+import net.ericaro.neoitertools.iterators.RepeatIterator;
+import net.ericaro.neoitertools.iterators.TakeWhileIterator;
 
-/** <p>This module implements a number of iterable building blocks inspired by constructs from the Python programming languages. 
- * Each has been recast in a form suitable for Java.</p>
- *
- * The module standardizes a core set of fast, memory efficient tools that are useful by themselves or in combination. 
- * Standardization helps avoid the readability and reliability problems which arise when many different individuals create their own slightly varying implementations, each with their own quirks and naming conventions.
+/**
+ * <p>
+ * This module implements a number of iterable building blocks inspired by
+ * constructs from the Python programming languages. Each has been recast in a
+ * form suitable for Java.
+ * </p>
  * 
- * The tools are designed to combine readily with one another. This makes it easy to construct more specialized tools succinctly and efficiently in pure Java.
+ * The module standardizes a core set of fast, memory efficient tools that are
+ * useful by themselves or in combination. Standardization helps avoid the
+ * readability and reliability problems which arise when many different
+ * individuals create their own slightly varying implementations, each with
+ * their own quirks and naming conventions.
+ * 
+ * The tools are designed to combine readily with one another. This makes it
+ * easy to construct more specialized tools succinctly and efficiently in pure
+ * Java.
  * 
  * @author eric
- *
+ * 
  */
 public class Iterables {
 
@@ -30,7 +41,6 @@ public class Iterables {
 			return arg.iterator();
 		}
 	};
-	
 
 	/**
 	 * Return True if all elements of the iterable are evaluated to true with
@@ -65,7 +75,7 @@ public class Iterables {
 	 * @return
 	 */
 	public static <T> List<T> asList(Iterable<T> iterable) {
-		return Iterators.asList(iterable.iterator());
+		return Iterators.list(iterable.iterator());
 	}
 
 	/**
@@ -142,17 +152,19 @@ public class Iterables {
 	 * values in each combination.
 	 * 
 	 * @param iterable
-	 * @param r size of returned tuples
+	 * @param r
+	 *            size of returned tuples
 	 * @return iterable over combinations as list
 	 */
-	public static <T> Iterable<List<T>> combinations(final Iterable<T> iterable, final int r) {
+	public static <T> Iterable<List<T>> combinations(
+			final Iterable<T> iterable, final int r) {
 		return new Iterable<List<T>>() {
 			public Iterator<List<T>> iterator() {
 				return Iterators.combinations(iterable.iterator(), r);
 			}
 		};
 	}
-	
+
 	/**
 	 * equivalent to count(0)
 	 * 
@@ -175,6 +187,24 @@ public class Iterables {
 
 			public Iterator<Integer> iterator() {
 				return Iterators.count(n);
+			}
+		};
+	}
+
+	/**
+	 * Make an iterable returning elements from the iterable and saving a copy
+	 * of each. When the iterable is exhausted, return elements from the saved
+	 * copy. Repeats indefinitely.
+	 * 
+	 * @param iterable
+	 * @return an iterable returning elements from the iterable over and over
+	 *         again.
+	 */
+	public static <T> Iterable<T> cycle(final Iterable<T> iterable) {
+		return new Iterable<T>() {
+
+			public Iterator<T> iterator() {
+				return new CycleIterator<T>(iterable.iterator());
 			}
 		};
 	}
@@ -204,9 +234,9 @@ public class Iterables {
 	/**
 	 * Return an {@link Iterable} of Index object. The next() method of the
 	 * iterable returned by enumerate() returns an Index containing a count
-	 * (from start which defaults to 0) and the corresponding value obtained from
-	 * iterating over iterable. enumerate() is useful for obtaining an indexed
-	 * series: (0, seq[0]), (1, seq[1]), (2, seq[2]), .... For example:
+	 * (from start which defaults to 0) and the corresponding value obtained
+	 * from iterating over iterable. enumerate() is useful for obtaining an
+	 * indexed series: (0, seq[0]), (1, seq[1]), (2, seq[2]), .... For example:
 	 * 
 	 * <pre>
 	 * for (Index index : enumerate(seasons))
@@ -233,38 +263,77 @@ public class Iterables {
 		};
 	}
 
-	
-	/** Make an iterable that filters elements from iterable returning only those for which the predicate is True. 
-	 *  
+	/**
+	 * Make an iterable that filters elements from iterable returning only those
+	 * for which the predicate is True.
+	 * 
 	 * 
 	 * @param predicate
 	 * @param iterable
 	 * @return
 	 */
-	public static <T> Iterable<T> filter(final Predicate<T> predicate, final Iterable<T> iterable){
+	public static <T> Iterable<T> filter(final Predicate<T> predicate,
+			final Iterable<T> iterable) {
 		return new Iterable<T>() {
 			public Iterator<T> iterator() {
-				return  Iterators.filter(predicate, iterable.iterator());
+				return Iterators.filter(predicate, iterable.iterator());
 			}
 		};
 	}
 
-	
-	
-	/** Make an iterable that filters elements from iterable returning only those for which the predicate is True. 
-	 *  
+	/**
+	 * Make an iterable that filters elements from iterable returning only those
+	 * for which the predicate is True.
+	 * 
 	 * 
 	 * @param predicate
 	 * @param iterable
 	 * @return
 	 */
-	public static <T> Iterable<T> filterfalse(final Predicate<T> predicate, final Iterable<T> iterable){
+	public static <T> Iterable<T> filterfalse(final Predicate<T> predicate,
+			final Iterable<T> iterable) {
 		return new Iterable<T>() {
 			public Iterator<T> iterator() {
 				return Iterators.filterfalse(predicate, iterable.iterator());
 			}
 		};
 	}
+
+	
+	/**
+	 * Make an iterable that returns consecutive keys and groups from the source
+	 * iterable. The key is a function computing a key value for each element.
+	 * Generally, the iterable needs to already be sorted on the same key
+	 * function.
+	 * 
+	 * The operation of groupby() is similar to the uniq filter in Unix. It
+	 * generates a break or new group every time the value of the key function
+	 * changes (which is why it is usually necessary to have sorted the data
+	 * using the same key function). That behavior differs from SQL’s GROUP BY
+	 * which aggregates common elements regardless of their input order.
+	 * 
+	 * The returned group is itself an iterator that shares the underlying
+	 * iterator with groupby(). Because the source is shared, when the groupby()
+	 * object is advanced, the previous group is no longer visible. So, if that
+	 * data is needed later, it should be stored as a list.
+	 * 
+	 * @param iterator
+	 *            the source iterator
+	 * @param key
+	 *            the key mapper
+	 * @return an iterator that returns consecutive keys and groups from the
+	 *         source iterator
+	 */
+	public static <T, K> Iterable<Couple<K, Iterator<T>>> groupby(
+			final Iterable<T> iterable, final Mapper<T, K> key) {
+		return new Iterable<Couple<K,Iterator<T>>>() {
+
+			public Iterator<Couple<K, Iterator<T>>> iterator() {
+				return new GroupByIterator<K, T>(iterable.iterator(), key);
+			}
+		};
+	}
+	
 	/**
 	 * Turns any CharSequence into an Iterable of Characters
 	 * 
@@ -273,14 +342,15 @@ public class Iterables {
 	 */
 	public static Iterable<Character> iter(final CharSequence s) {
 		return new Iterable<Character>() {
-			
+
 			public Iterator<Character> iterator() {
 				return Iterators.iter(s);
 			}
 		};
 	}
-	
-	/** return a single usage iterable over this iterator
+
+	/**
+	 * return a single usage iterable over this iterator
 	 * 
 	 * @param <T>
 	 * @param iterator
@@ -288,13 +358,13 @@ public class Iterables {
 	 */
 	public static <T> Iterable<T> in(final Iterator<T> iterator) {
 		return new Iterable<T>() {
-			
+
 			public Iterator<T> iterator() {
 				return iterator;
 			}
 		};
 	}
-	
+
 	/**
 	 * Turns any byte[] array into an iterable
 	 * 
@@ -307,10 +377,10 @@ public class Iterables {
 				return Iterators.iter(array);
 			}
 		};
-			
+
 	}
 
-/**
+	/**
 	 * Turns any char[] array into an iterable
 	 * 
 	 * @param array
@@ -322,10 +392,10 @@ public class Iterables {
 				return Iterators.iter(array);
 			}
 		};
-			
+
 	}
 
-/**
+	/**
 	 * Turns any short[] array into an iterable
 	 * 
 	 * @param array
@@ -337,10 +407,10 @@ public class Iterables {
 				return Iterators.iter(array);
 			}
 		};
-			
+
 	}
 
-/**
+	/**
 	 * Turns any int[] array into an iterable
 	 * 
 	 * @param array
@@ -352,10 +422,10 @@ public class Iterables {
 				return Iterators.iter(array);
 			}
 		};
-			
+
 	}
 
-/**
+	/**
 	 * Turns any long[] array into an iterable
 	 * 
 	 * @param array
@@ -367,10 +437,10 @@ public class Iterables {
 				return Iterators.iter(array);
 			}
 		};
-			
+
 	}
 
-/**
+	/**
 	 * Turns any float[] array into an iterable
 	 * 
 	 * @param array
@@ -382,10 +452,10 @@ public class Iterables {
 				return Iterators.iter(array);
 			}
 		};
-			
+
 	}
 
-/**
+	/**
 	 * Turns any double[] array into an iterable
 	 * 
 	 * @param array
@@ -397,10 +467,10 @@ public class Iterables {
 				return Iterators.iter(array);
 			}
 		};
-			
+
 	}
 
-/**
+	/**
 	 * Turns any boolean[] array into an iterable
 	 * 
 	 * @param array
@@ -412,10 +482,8 @@ public class Iterables {
 				return Iterators.iter(array);
 			}
 		};
-			
+
 	}
-
-
 
 	/**
 	 * Turns any object array into an Iterable
@@ -462,7 +530,8 @@ public class Iterables {
 		};
 	}
 
-	/** Return successive full length permutations of elements in the iterator.
+	/**
+	 * Return successive full length permutations of elements in the iterator.
 	 * 
 	 * 
 	 * Permutations are emitted in lexicographic sort order. So, if the input
@@ -478,8 +547,10 @@ public class Iterables {
 	 */
 	public static <T> Iterable<List<T>> permutations(final Iterable<T> iterable) {
 		return new Iterable<List<T>>() {
-			public Iterator<List<T>> iterator() {return Iterators.permutations(iterable.iterator());}
-			
+			public Iterator<List<T>> iterator() {
+				return Iterators.permutations(iterable.iterator());
+			}
+
 		};
 	}
 
@@ -498,15 +569,17 @@ public class Iterables {
 	 * @param r
 	 * @return
 	 */
-	public static <T> Iterable<List<T>> permutations(final Iterable<T> iterable, final int r) {
+	public static <T> Iterable<List<T>> permutations(
+			final Iterable<T> iterable, final int r) {
 		return new Iterable<List<T>>() {
-			public Iterator<List<T>> iterator() {return Iterators.permutations(iterable.iterator(), r);}
-			
+			public Iterator<List<T>> iterator() {
+				return Iterators.permutations(iterable.iterator(), r);
+			}
+
 		};
-	
+
 	}
 
-	
 	/**
 	 * equivalent to
 	 * 
@@ -594,47 +667,92 @@ public class Iterables {
 		};
 	}
 
-	/** equivalent to reduce(operator, iterable, null);
+	/**
+	 * equivalent to reduce(operator, iterable, null);
 	 * 
 	 * @param <T>
 	 * @param operator
 	 * @param iterable
 	 * @return
 	 */
-	public static <T> T reduce( Operator<T> operator, Iterable<T> iterable){
+	public static <T> T reduce(Operator<T> operator, Iterable<T> iterable) {
 		return reduce(operator, iterable, null);
 	}
 
-	/** Apply function of two arguments cumulatively to the items of iterable, from left to right, 
-	 * so as to reduce the iterable to a single value. 
-	 * For example, 
+	/**
+	 * Apply function of two arguments cumulatively to the items of iterable,
+	 * from left to right, so as to reduce the iterable to a single value. For
+	 * example,
+	 * 
 	 * <pre>
-	 * Operator<Integer> iadd = new Operator<Integer>() {
-			public Integer operate(Integer t1, Integer t2) {
-				return t1+t2;
-			}
-		};
-		Integer res = reduce(iadd , range(1,6), 0);
-		</pre>
-		calculates
-		<pre>
-		((((1+2)+3)+4)+5)
-		</pre>
-		The left argument, x, is the accumulated value and the right argument, y, is the update value from the iterable. 
-		If the initializer is not null, it is placed before the items of the iterable in the calculation, and serves as a default when the iterable is empty. 
-		If initializer is null and iterator contains only one item, the first item is returned.
+	 * Operator&lt;Integer&gt; iadd = new Operator&lt;Integer&gt;() {
+	 * 	public Integer operate(Integer t1, Integer t2) {
+	 * 		return t1 + t2;
+	 * 	}
+	 * };
+	 * Integer res = reduce(iadd, range(1, 6), 0);
+	 * </pre>
+	 * 
+	 * calculates
+	 * 
+	 * <pre>
+	 * ((((1 + 2) + 3) + 4) + 5)
+	 * </pre>
+	 * 
+	 * The left argument, x, is the accumulated value and the right argument, y,
+	 * is the update value from the iterable. If the initializer is not null, it
+	 * is placed before the items of the iterable in the calculation, and serves
+	 * as a default when the iterable is empty. If initializer is null and
+	 * iterator contains only one item, the first item is returned.
 	 * 
 	 * @param operator
 	 * @param iterable
 	 * @param initializer
 	 * @return
 	 */
-	public static <T> T reduce( Operator<T> operator, Iterable<T> iterable, T initializer){
+	public static <T> T reduce(Operator<T> operator, Iterable<T> iterable,
+			T initializer) {
 		return Iterators.reduce(operator, iterable.iterator(), initializer);
 	}
-	
-	
-	/** equivalent to {@link Iterators#slice}(0, stop, 1);
+
+	/**
+	 * Make an iterable that returns object over and over again. Runs
+	 * indefinitely. Used as argument to
+	 * imap() for invariant function parameters. Also used with izip() to create
+	 * constant fields in a tuple record.
+	 * 
+	 * @param object
+	 * @return an iterable that returns object over and over again.
+	 */
+	public static <T> Iterable<T> repeat(final T object) {
+		return new Iterable<T>() {
+
+			public Iterator<T> iterator() {
+				return new RepeatIterator<T>(object);
+			}
+		};
+	}
+	/**
+	 * Make an iterable that returns object over and over again. Runs
+	 * indefinitely unless the times argument is specified. Used as argument to
+	 * imap() for invariant function parameters. Also used with izip() to create
+	 * constant fields in a tuple record. 
+	 * 
+	 * @param object
+	 * @param times
+	 * @return an iterable that returns object over and over again.
+	 */
+	public static <T> Iterable<T> repeat(final T object, final int times) {
+		return new Iterable<T>() {
+			
+			public Iterator<T> iterator() {
+				return new RepeatIterator<T>(object, times);
+			}
+		};
+	}
+
+	/**
+	 * equivalent to {@link Iterators#slice}(0, stop, 1);
 	 * 
 	 * @param <T>
 	 * @param iterable
@@ -642,11 +760,13 @@ public class Iterables {
 	 * @param stop
 	 * @return
 	 */
-	public static <T> Iterable<T> slice(final Iterable<T> iterable, final int stop) {
-		return slice(iterable,0, stop, 1);
+	public static <T> Iterable<T> slice(final Iterable<T> iterable,
+			final int stop) {
+		return slice(iterable, 0, stop, 1);
 	}
-	
-	/** equivalent to {@link Iterators#slice}(start, stop, 1);
+
+	/**
+	 * equivalent to {@link Iterators#slice}(start, stop, 1);
 	 * 
 	 * @param <T>
 	 * @param iterator
@@ -654,14 +774,18 @@ public class Iterables {
 	 * @param stop
 	 * @return
 	 */
-	public static <T> Iterable<T> slice(final Iterable<T> iterable, final int start, final int stop) {
+	public static <T> Iterable<T> slice(final Iterable<T> iterable,
+			final int start, final int stop) {
 		return slice(iterable, start, stop, 1);
 	}
-	
-	/** Make an iterable that returns selected elements from the iterable. 
-	 * If start is non-zero, then elements from the iterator are skipped until start is reached. 
-	 * Afterward, elements are returned consecutively unless step is set higher than one which results in items being skipped. 
-	 * It stops at the specified position. slice() does not support negative values for start, stop, or step. 
+
+	/**
+	 * Make an iterable that returns selected elements from the iterable. If
+	 * start is non-zero, then elements from the iterator are skipped until
+	 * start is reached. Afterward, elements are returned consecutively unless
+	 * step is set higher than one which results in items being skipped. It
+	 * stops at the specified position. slice() does not support negative values
+	 * for start, stop, or step.
 	 * 
 	 * @param iterable
 	 * @param start
@@ -677,45 +801,53 @@ public class Iterables {
 			}
 		};
 	}
-	
-		
-	/** return a sorted Iterable in natural ascending order of T.
+
+	/**
+	 * return a sorted Iterable in natural ascending order of T.
 	 * 
 	 * @param <T>
 	 * @param iterable
 	 * @return
 	 */
-	public static <T extends Comparable<? super T>> Iterable<T> sorted(final Iterable<T> iterable){
+	public static <T extends Comparable<? super T>> Iterable<T> sorted(
+			final Iterable<T> iterable) {
 		return new Iterable<T>() {
 			public Iterator<T> iterator() {
 				return Iterators.sorted(iterable.iterator());
 			}
 		};
 	}
-	
-	/** Return a new sorted iterable from the items in iterable.
-	
-	cmp specifies a custom Comparator of K.
-	key specifies a {@link Mapper} that is used to extract a comparison key (K) from each iterable element. 
-	reverse is a boolean value. If set to True, then the list elements are sorted as if each comparison were reversed.
+
+	/**
+	 * Return a new sorted iterable from the items in iterable.
+	 * 
+	 * cmp specifies a custom Comparator of K. key specifies a {@link Mapper}
+	 * that is used to extract a comparison key (K) from each iterable element.
+	 * reverse is a boolean value. If set to True, then the list elements are
+	 * sorted as if each comparison were reversed.
 	 * 
 	 * @param iterable
 	 * @param key
-	 * @param cmp comparator of keys
+	 * @param cmp
+	 *            comparator of keys
 	 * @param reverse
 	 * @return
 	 */
-	public static <T, K> Iterable<T> sorted(final Iterable<T> iterable, final Mapper<T,K> key, final Comparator<? super K> cmp, final boolean reverse){
+	public static <T, K> Iterable<T> sorted(final Iterable<T> iterable,
+			final Mapper<T, K> key, final Comparator<? super K> cmp,
+			final boolean reverse) {
 
 		return new Iterable<T>() {
 			public Iterator<T> iterator() {
 				return Iterators.sorted(iterable.iterator(), cmp, key, reverse);
 			}
 		};
-	
+
 	}
-	/**Return a new sorted iterable from the items in iterable.
-	 * the comparator is used to sort the iterable.
+
+	/**
+	 * Return a new sorted iterable from the items in iterable. the comparator
+	 * is used to sort the iterable.
 	 * 
 	 * @param <T>
 	 * @param <K>
@@ -724,19 +856,21 @@ public class Iterables {
 	 * @param reverse
 	 * @return
 	 */
-	public static <T> Iterable<T> sorted(final Iterable<T> iterable, final Comparator<? super T> cmp){
+	public static <T> Iterable<T> sorted(final Iterable<T> iterable,
+			final Comparator<? super T> cmp) {
 
 		return new Iterable<T>() {
 			public Iterator<T> iterator() {
 				return Iterators.sorted(iterable.iterator(), cmp);
 			}
 		};
-	
+
 	}
-	
-	
-	/**Return a new sorted iterable from the items in iterable.
-	 * the Key Mapper is used to extract a key from T, and that key natural order is used to sort the whole iterable.
+
+	/**
+	 * Return a new sorted iterable from the items in iterable. the Key Mapper
+	 * is used to extract a key from T, and that key natural order is used to
+	 * sort the whole iterable.
 	 * 
 	 * @param <T>
 	 * @param <K>
@@ -745,16 +879,34 @@ public class Iterables {
 	 * @param reverse
 	 * @return
 	 */
-	public static <T, K extends Comparable<? super K>> Iterable<T> sorted(final Iterable<T> iterable, final Mapper<T,K> key, final boolean reverse){
+	public static <T, K extends Comparable<? super K>> Iterable<T> sorted(
+			final Iterable<T> iterable, final Mapper<T, K> key,
+			final boolean reverse) {
 		return new Iterable<T>() {
 			public Iterator<T> iterator() {
 				return Iterators.sorted(iterable.iterator(), key, reverse);
 			}
 		};
 	}
-	
-	
-	
+
+	/**
+	 * Make an iterator that returns elements from the iterator as long as the
+	 * predicate is true.
+	 * 
+	 * @param iterator
+	 * @param predicate
+	 * @return an iterator that returns elements from the iterator as long as
+	 *         the predicate is true.
+	 */
+	public static <T> Iterable<T> takewhile(final Iterable<T> iterable,
+			final Predicate<T> predicate) {
+		return new Iterable<T>() {
+			public Iterator<T> iterator() {
+				return new TakeWhileIterator<T>(iterable.iterator(), predicate);
+			}
+		};
+	}
+
 	/**
 	 * Turns any Iterable into a "tuple", here an unmodifiable {@link List}
 	 * 
@@ -817,14 +969,16 @@ public class Iterables {
 			}
 		};
 	}
-	
-	/** Return a reverse iterable. 
-	 *  The whole iterable is stored, so be careful when used.
+
+	/**
+	 * Return a reverse iterable. The whole iterable is stored, so be careful
+	 * when used.
+	 * 
 	 * @param <T>
 	 * @param iterable
 	 * @return
 	 */
-	public <T> Iterable<T> reversed(final Iterable<T> iterable){
+	public <T> Iterable<T> reversed(final Iterable<T> iterable) {
 		return new Iterable<T>() {
 
 			public Iterator<T> iterator() {
@@ -832,7 +986,5 @@ public class Iterables {
 			}
 		};
 	}
-	
-	
 
 }
