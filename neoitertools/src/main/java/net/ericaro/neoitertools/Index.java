@@ -15,6 +15,22 @@ public class Index<T> {
 		this.value = value;
 	}
 
+	@Override
+	public String toString() {
+		return i+":"+String.valueOf(value);
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Index) {
+			Index that = (Index) other;
+			return i== that.i && ( value==that.value || value.equals(that.value)) ; 
+		}
+		return false;
+	}
+
+	
+	
 	
 	
 	
