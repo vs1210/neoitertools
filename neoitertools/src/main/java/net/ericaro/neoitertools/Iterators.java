@@ -6,9 +6,25 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import net.ericaro.neoitertools.combinatorics.Combinatorics;
+import net.ericaro.neoitertools.iterators.ChainIterator;
+import net.ericaro.neoitertools.iterators.CharSequenceIterator;
+import net.ericaro.neoitertools.iterators.CycleIterator;
+import net.ericaro.neoitertools.iterators.EmptyIterator;
+import net.ericaro.neoitertools.iterators.EnumerateIterator;
+import net.ericaro.neoitertools.iterators.FilterIterator;
+import net.ericaro.neoitertools.iterators.GenericArrayIterator;
+import net.ericaro.neoitertools.iterators.GroupByIterator;
+import net.ericaro.neoitertools.iterators.IteratorIterable;
+import net.ericaro.neoitertools.iterators.MapIterator;
+import net.ericaro.neoitertools.iterators.RangeIterator;
+import net.ericaro.neoitertools.iterators.RepeatIterator;
+import net.ericaro.neoitertools.iterators.SingletonIterator;
+import net.ericaro.neoitertools.iterators.SliceIterator;
+import net.ericaro.neoitertools.iterators.TakeWhileIterator;
+import net.ericaro.neoitertools.iterators.Zip2Iterator;
+import net.ericaro.neoitertools.iterators.ZipIterator;
 import net.ericaro.neoitertools.primitives.BooleanIterator;
 import net.ericaro.neoitertools.primitives.ByteIterator;
 import net.ericaro.neoitertools.primitives.CharacterIterator;
@@ -42,62 +58,6 @@ import net.ericaro.neoitertools.primitives.ShortIterator;
 public class Iterators {
 
 	/**
-	 * Simple utility that contains an empty iterator
-	 * 
-	 * @author eric
-	 * 
-	 * @param <T>
-	 */
-	static final class EmptyIterator<T> implements Iterator<T> {
-
-		public boolean hasNext() {
-			return false;
-		}
-
-		public T next() {
-			return null;
-		}
-
-		public void remove() {
-			throw new UnsupportedOperationException();
-		}
-
-	}
-
-	/**
-	 * A simple Iterator that returns a single value.
-	 * 
-	 * @author eric
-	 * 
-	 * @param <T>
-	 */
-	static final class SingletonIterator<T> implements Iterator<T> {
-		boolean returned = false;
-		T t;
-
-		public SingletonIterator(T t) {
-			super();
-			this.t = t;
-		}
-
-		public boolean hasNext() {
-			return !returned;
-		}
-
-		public T next() {
-			if (returned)
-				throw new NoSuchElementException();
-			returned = true;
-			return t;
-		}
-
-		public void remove() {
-			throw new UnsupportedOperationException();
-		}
-
-	}
-
-	/**
 	 * Return True if all elements of the iterator are evaluated to true with
 	 * the Predicate (or if the iterator is empty).
 	 * 
@@ -128,42 +88,8 @@ public class Iterators {
 		return false;
 	}
 
-	/**
-	 * turn any Iterator into a list. Implementation uses a LinkedList
-	 * 
-	 * @param <T>
-	 * @param iterator
-	 * @return
-	 */
-	public static <T> List<T> asList(Iterator<T> iterator) {
-		List<T> list = new LinkedList<T>();
-		while (iterator.hasNext())
-			list.add(iterator.next());
-		return list;
-	}
-
-	/**
-	 * Turn any Iterator of Character into a String
-	 * 
-	 * @param chars
-	 * @return
-	 */
-	public static String asString(Iterator<Character> chars) {
-		return asStringBuilder(chars).toString();
-	}
-
-	/**
-	 * Turn any Iterator of Character into a StringBuilder
-	 * 
-	 * @param chars
-	 * @return
-	 */
-	public static StringBuilder asStringBuilder(Iterator<Character> chars) {
-		StringBuilder sb = new StringBuilder();
-		while (chars.hasNext())
-			sb.append(chars.next().charValue());
-		return sb;
-	}
+	
+	
 
 	/**
 	 * Make an iterator that returns elements from the first iterable until it
@@ -171,7 +97,7 @@ public class Iterators {
 	 * iterables are exhausted. Used for treating consecutive sequences as a
 	 * single sequence.
 	 * 
-	 * We do not use varargs due to an inner flaw in varargs that make them hard
+	 * We do not use varargs due to an inner flaw in varargs that make them hard/impossible
 	 * to combine with generics
 	 * 
 	 * @param iterators
@@ -179,43 +105,7 @@ public class Iterators {
 	 * @return
 	 */
 	public static <T> Iterator<T> chain(final Iterator<Iterator<T>> iterators) {
-		return new Iterator<T>() {
-			Iterator<Iterator<T>> metaIterator = iterators;
-			Iterator<T> currentIterator;
-			Iterator<T> previousIterator;
-
-			public boolean hasNext() {
-				move();
-				return currentIterator.hasNext();
-			}
-
-			public void move() {
-				if (currentIterator == null)
-					currentIterator = metaIterator.next();
-				// move to the next iterator
-				while (!currentIterator.hasNext() && metaIterator.hasNext())
-					currentIterator = metaIterator.next();
-				// either currentIterator has next value, or I've exhausted
-				// the metaIterator
-			}
-
-			public T next() {
-				try {
-					move();
-					return currentIterator.next();
-				} finally {
-					previousIterator = currentIterator; // store the iterator
-														// that causes the next,
-														// for the remove method
-					move();
-				}
-			}
-
-			public void remove() {
-				previousIterator.remove();
-			}
-
-		};
+		return new ChainIterator<T>(iterators);
 	}
 
 	/**
@@ -248,7 +138,7 @@ public class Iterators {
 	 * @return iterator over combinations as list
 	 */
 	public static <T> Iterator<List<T>> combinations(Iterator<T> iterator, int r) {
-		List<T> list = asList(iterator);
+		List<T> list = list(iterator);
 		return Combinatorics.applied(list,
 				Combinatorics.combinations(list.size(), r));
 	}
@@ -271,23 +161,20 @@ public class Iterators {
 	 * @return
 	 */
 	public static Iterator<Integer> count(final int n) {
+		return new RangeIterator(0, 1, Integer.MAX_VALUE); 
+	}
 
-		return new Iterator<Integer>() {
-			int i = n;
-
-			public boolean hasNext() {
-				return true;
-			}
-
-			public Integer next() {
-				return i++;
-			}
-
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}
-
-		};
+	/**
+	 * Make an iterator returning elements from the iterator and saving a copy
+	 * of each. When the iterator is exhausted, return elements from the saved
+	 * copy. Repeats indefinitely.
+	 * 
+	 * @param iterator
+	 * @return an iterator returning elements from the iterator over and over
+	 *         again.
+	 */
+	public static <T> Iterator<T> cycle(Iterator<T> iterator) {
+		return new CycleIterator<T>(iterator);
 	}
 
 	/**
@@ -303,7 +190,6 @@ public class Iterators {
 	 */
 	public static <T> Iterator<T> dropwhile(final Iterator<T> iterator,
 			final Predicate<T> predicate) {
-
 		// consume the unwanted elements
 		while (iterator.hasNext()) {
 			T t = iterator.next();
@@ -342,21 +228,7 @@ public class Iterators {
 	 */
 	public static <T> Iterator<Index<T>> enumerate(final Iterator<T> iterator) {
 
-		return new Iterator<Index<T>>() {
-			Iterator<Integer> i1 = count();
-
-			public boolean hasNext() {
-				return iterator.hasNext();
-			}
-
-			public Index<T> next() {
-				return new Index<T>(i1.next(), iterator.next());
-			}
-
-			public void remove() {
-				iterator.remove();
-			}
-		};
+		return new EnumerateIterator<T>(iterator);
 	}
 
 	/**
@@ -370,53 +242,12 @@ public class Iterators {
 	 */
 	public static <T> Iterator<T> filter(final Predicate<T> predicate,
 			final Iterator<T> iterator) {
-		return new Iterator<T>() {
-			T next;
-			boolean hasNext = false;
-			boolean first = true;
-
-			public boolean hasNext() {
-				if (first) {
-					first = false;
-					move();
-				}
-				return hasNext;
-			}
-
-			private void move() {
-				hasNext = false;
-				while (iterator.hasNext()) {
-					next = iterator.next();
-					if (predicate.map(next)) {
-						hasNext = true;
-						break;//
-					}
-				}
-			}
-
-			public T next() {
-				if (first) {
-					first = false;
-					move();
-				}
-				try {
-					return next;
-				} finally {
-					move();
-				}
-
-			}
-
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}
-
-		};
+		return new FilterIterator<T>(iterator, predicate);
 	}
 
 	/**
 	 * Make an iterator that filters elements from iterator returning only those
-	 * for which the predicate is True.
+	 * for which the predicate is False.
 	 * 
 	 * 
 	 * @param predicate
@@ -425,12 +256,36 @@ public class Iterators {
 	 */
 	public static <T> Iterator<T> filterfalse(final Predicate<T> predicate,
 			final Iterator<T> iterator) {
-		return filter(new Predicate<T>() {
+		return new FilterIterator<T>(iterator, predicate, true);
+		}
 
-			public Boolean map(T arg) {
-				return !predicate.map(arg);
-			}
-		}, iterator);
+	/**
+	 * Make an iterator that returns consecutive keys and groups from the source
+	 * iterator. The key is a function computing a key value for each element.
+	 * Generally, the iterator needs to already be sorted on the same key
+	 * function.
+	 * 
+	 * The operation of groupby() is similar to the uniq filter in Unix. It
+	 * generates a break or new group every time the value of the key function
+	 * changes (which is why it is usually necessary to have sorted the data
+	 * using the same key function). That behavior differs from SQL’s GROUP BY
+	 * which aggregates common elements regardless of their input order.
+	 * 
+	 * The returned group is itself an iterator that shares the underlying
+	 * iterator with groupby(). Because the source is shared, when the groupby()
+	 * object is advanced, the previous group is no longer visible. So, if that
+	 * data is needed later, it should be stored as a list.
+	 * 
+	 * @param iterator
+	 *            the source iterator
+	 * @param key
+	 *            the key mapper
+	 * @return an iterator that returns consecutive keys and groups from the
+	 *         source iterator
+	 */
+	public static <T, K> Iterator<Couple<K, Iterator<T>>> groupby(
+			Iterator<T> iterator, Mapper<T, K> key) {
+		return new GroupByIterator<K, T>(iterator, key);
 	}
 
 	/**
@@ -441,22 +296,7 @@ public class Iterators {
 	 * @return
 	 */
 	public static Iterator<Character> iter(final CharSequence seq) {
-		return new Iterator<Character>() {
-			int i = 0;
-
-			public boolean hasNext() {
-				return i < seq.length();
-			}
-
-			public Character next() {
-				return seq.charAt(i++);
-			}
-
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}
-
-		};
+		return new CharSequenceIterator(seq);
 
 	}
 
@@ -566,22 +406,7 @@ public class Iterators {
 	 * @return
 	 */
 	public static <T> Iterator<T> iter(final T[] t) {
-		return new Iterator<T>() {
-			int i = 0;
-
-			public boolean hasNext() {
-				return i < t.length;
-			}
-
-			public T next() {
-				return t[i++];
-			}
-
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}
-
-		};
+		return new GenericArrayIterator<T>(t);
 	}
 
 	/**
@@ -609,21 +434,7 @@ public class Iterators {
 	public static <I, O> Iterator<O> map(final Mapper<I, O> mapper,
 			final Iterator<I> iterator) {
 
-		return new Iterator<O>() {
-
-			public boolean hasNext() {
-				return iterator.hasNext();
-			}
-
-			public O next() {
-				return mapper.map(iterator.next());
-			}
-
-			public void remove() {
-				iterator.remove();
-			}
-
-		};
+		return new MapIterator<O, I>(iterator, mapper);
 
 	}
 
@@ -643,7 +454,7 @@ public class Iterators {
 	 * @return iterator of permuted list
 	 */
 	public static <T> Iterator<List<T>> permutations(Iterator<T> iterator) {
-		List<T> list = asList(iterator);
+		List<T> list = list(iterator);
 		return Combinatorics.applied(list,
 				Combinatorics.permutations(list.size()));
 	}
@@ -664,7 +475,7 @@ public class Iterators {
 	 * @return
 	 */
 	public static <T> Iterator<List<T>> permutations(Iterator<T> iterator, int r) {
-		List<T> list = asList(iterator);
+		List<T> list = list(iterator);
 		return Combinatorics.applied(list,
 				Combinatorics.sublists(list.size(), r));
 	}
@@ -749,28 +560,7 @@ public class Iterators {
 	 */
 	public static Iterator<Integer> range(final int start, final int end,
 			final int step) throws InvalidParameterException {
-		if (step == 0)
-			throw new InvalidParameterException("step must be != 0");
-		return new Iterator<Integer>() {
-			int i = start;
-
-			public boolean hasNext() {
-				return step > 0 ? i < end : i > end;
-			}
-
-			public Integer next() {
-				try {
-					return i;
-				} finally {
-					i += step;
-				}
-			}
-
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}
-
-		};
+		return new RangeIterator(start, step, end);
 	}
 
 	/**
@@ -828,6 +618,47 @@ public class Iterators {
 	}
 
 	/**
+	 * Return a reverse iterator. The whole iterator is stored, so be careful
+	 * when used.
+	 * 
+	 * @param <T>
+	 * @param iterator
+	 * @return
+	 */
+	public static <T> Iterator<T> reversed(Iterator<T> iterator) {
+		List<T> list = list(iterator);
+		Collections.reverse(list);
+		return list.iterator();
+	}
+
+	/**
+	 * Make an iterator that returns object over and over again. Runs
+	 * indefinitely Used as argument to imap() for invariant function
+	 * parameters. Also used with izip() to create constant fields in a tuple
+	 * record.
+	 * 
+	 * @param object
+	 * @return an iterator that returns object over and over again.
+	 */
+	public static <T> Iterator<T> repeat(T object) {
+		return new RepeatIterator<T>(object);
+	}
+
+	/**
+	 * Make an iterator that returns object over and over again. Runs
+	 * indefinitely unless the times argument is specified. Used as argument to
+	 * imap() for invariant function parameters. Also used with izip() to create
+	 * constant fields in a tuple record.
+	 * 
+	 * @param object
+	 * @param times
+	 * @return an iterator that returns object over and over again.
+	 */
+	public static <T> Iterator<T> repeat(T object, int times) {
+		return new RepeatIterator<T>(object, times);
+	}
+
+	/**
 	 * equivalent to {@link Iterators#slice}(0, stop, 1);
 	 * 
 	 * @param <T>
@@ -838,7 +669,7 @@ public class Iterators {
 	 */
 	public static <T> Iterator<T> slice(final Iterator<T> iterator,
 			final int stop) {
-		return slice_0(iterator, stop, 1);
+		return new SliceIterator<T>(iterator, 0, stop, 1);
 	}
 
 	/**
@@ -871,59 +702,9 @@ public class Iterators {
 	 */
 	public static <T> Iterator<T> slice(final Iterator<T> iterator,
 			final int start, final int stop, final int step) {
-
-		int i = 0;
-		while (i < start && iterator.hasNext())
-			iterator.next();
-		if (i < start)
-			return new EmptyIterator<T>(); // start was greater than the
-											// iterator
-		// iterator is now ready to produce
-		return slice_0(iterator, stop - start, step);
+		return new SliceIterator<T>(iterator, start, stop, step);
 	}
 
-	private static <T> Iterator<T> slice_0(final Iterator<T> iterator,
-			final int stop, final int step) {
-		if (!iterator.hasNext())
-			return new EmptyIterator<T>();
-
-		return new Iterator<T>() {
-			int i = 0;
-			boolean hasNext = false;
-			T next = iterator.next();
-
-			public boolean hasNext() {
-				return i <= stop;
-			}
-
-			private void move() {
-
-				hasNext = true; // asumme it has next
-				int k = 0;
-				while (k < step && iterator.hasNext()) { // consume has much as
-															// possible
-					k++;
-					next = iterator.next();// consume item
-				}
-				hasNext = (k == step);
-
-			}
-
-			public T next() {
-				try {
-					return next;
-				} finally {
-					move();
-				}
-
-			}
-
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}
-
-		};
-	}
 
 	/**
 	 * return a sorted Iterator in natural ascending order of T.
@@ -1026,6 +807,64 @@ public class Iterators {
 		}, key, reverse);
 	}
 
+	
+	/**
+	 * Turn any Iterator of Character into a String
+	 * 
+	 * @param chars
+	 * @return
+	 */
+	public static String string(Iterator<Character> chars) {
+		return stringBuilder(chars).toString();
+	}
+
+	/**
+	 * Turn any Iterator of Character into a StringBuilder
+	 * 
+	 * @param chars
+	 * @return
+	 */
+	public static StringBuilder stringBuilder(Iterator<Character> chars) {
+		StringBuilder sb = new StringBuilder();
+		while (chars.hasNext())
+			sb.append(chars.next().charValue());
+		return sb;
+	}
+	
+	/**
+	 * Make an iterator that returns elements from the iterator as long as the
+	 * predicate is true.
+	 * 
+	 * @param iterator
+	 * @param predicate
+	 * @return an iterator that returns elements from the iterator as long as
+	 *         the predicate is true.
+	 */
+	public static <T> Iterator<T> takewhile(final Iterator<T> iterator,
+			final Predicate<T> predicate) {
+		return new TakeWhileIterator<T>(iterator, predicate);
+	}
+
+	/**
+	 * Return n independent iterators from a single iterable.
+	 * 
+	 * @param iterator
+	 *            the source iterator
+	 * @param n
+	 *            number of independent iterators
+	 * @return an unmodifiable list of iterators.
+	 */
+	public static <T> List<Iterator<T>> tee(Iterator<T> iterator, int n) {
+		// create the iterator provider
+		final IteratorIterable<T> ii = new IteratorIterable<T>(iterator);
+
+		return tuple(map(new Mapper<Integer, Iterator<T>>() {
+			public Iterator<T> map(Integer arg) {
+				return ii.iterator();
+			}
+		}, range(n)));
+	}
+
 	/**
 	 * Turns any Iterator into a "tuple", here an unmodifiable {@link List}
 	 * 
@@ -1054,30 +893,7 @@ public class Iterators {
 	 */
 	public static <T> Iterator<List<T>> zip(Iterator<Iterator<T>> iterators) {
 		final List<Iterator<T>> iteratorList = list(iterators);
-		return new Iterator<List<T>>() {
-
-			public boolean hasNext() {
-				return all(iteratorList.iterator(),
-						new Predicate<Iterator<T>>() {
-							public Boolean map(Iterator<T> t) {
-								return t.hasNext();
-							}
-						});
-			}
-
-			public List<T> next() {
-				return tuple(map(new Mapper<Iterator<T>, T>() {
-					public T map(Iterator<T> t) {
-						return t.next();
-					}
-				}, iteratorList.iterator()));
-			}
-
-			public void remove() {
-				for (Iterator<T> i : iteratorList)
-					i.remove();
-			}
-		};
+		return new ZipIterator<T>(iteratorList);
 	}
 
 	/**
@@ -1096,41 +912,8 @@ public class Iterators {
 	public static <T1, T2> Iterator<Couple<T1, T2>> zip(
 			final Iterator<T1> iterator1, final Iterator<T2> iterator2) {
 
-		return new Iterator<Couple<T1, T2>>() {
-
-			public boolean hasNext() {
-				return (iterator1.hasNext() && iterator2.hasNext());
-			}
-
-			public Couple<T1, T2> next() {
-				return new Couple<T1, T2>(iterator1.next(), iterator2.next());
-			}
-
-			public void remove() {
-				iterator1.remove();
-				iterator2.remove();
-			}
-		};
+		return new Zip2Iterator<T1, T2>(iterator1, iterator2);
 	}
 
-	/**
-	 * Return a reverse iterator. The whole iterator is stored, so be careful
-	 * when used.
-	 * 
-	 * @param <T>
-	 * @param iterator
-	 * @return
-	 */
-	public static <T> Iterator<T> reversed(Iterator<T> iterator) {
-		List<T> list = list(iterator);
-		Collections.reverse(list);
-		return list.iterator();
-	}
-
-	// TODO groupby(Iterator<T> iterator, Mapper<T, K> key ){}
-	// TODO cycle
 	// TODO product
-	// TODO repeat
-	// TODO takewhile
-	// TODO tee
 }
