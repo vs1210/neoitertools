@@ -1,4 +1,5 @@
 #summary Java port of Python generator protocol
+#labels Featured
 #sidebar TableOfContents
 
 Python uses an [http://docs.python.org/glossary.html#term-iterator Iterator protocol] that is quite different from the [http://download.oracle.com/javase/6/docs/api/java/util/Iterator.html Iterator protocol] as defined in Java.
@@ -25,4 +26,3 @@ The requirement made by Java to know if there is a next element ( kind of `bette
 The only implementation is to pre-fetch the next item so that it is possible to tell if the operation was a success or not.
 
 But this "pre-fetching" has dangerous side effects. In particular the GroupByGenerator.
-
