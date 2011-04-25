@@ -3,7 +3,8 @@ package net.ericaro.neoitertools;
 /** A simple immutable object used to handle both the index and the object
  * @author eric
  *
- * @param <T>
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/Index">Index's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class Index<T> {
 

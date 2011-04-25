@@ -5,7 +5,8 @@ import java.util.NoSuchElementException;
 /** A big number that follows combinations.
  * 
  * @author eric
- *
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/CombinationNumber">CombinationNumber's wiki page</a>
+ * @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class CombinationNumber extends BigNumber {
 	FixedSumNumber fixedSum;

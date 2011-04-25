@@ -11,7 +11,8 @@ import net.ericaro.neoitertools.Generator;
  * 
  * @author eric
  * 
- * @param <T>
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/RepeatGenerator">RepeatGenerator's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class RepeatGenerator<T> implements Generator<T> {
 

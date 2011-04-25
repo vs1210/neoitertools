@@ -5,6 +5,13 @@ import java.util.NoSuchElementException;
 import net.ericaro.neoitertools.Generator;
 import net.ericaro.neoitertools.Lambda;
 
+/** Drops item while the condition is true, and then start to return them. 
+ * 
+ * @author eric
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/DropWhileGenerator">DropWhileGenerator's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
+ *
+ */
 public class DropWhileGenerator<T> implements Generator<T>{
 	
 	Generator<T> source;

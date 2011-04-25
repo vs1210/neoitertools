@@ -1,11 +1,13 @@
 package net.ericaro.neoitertools.generators.primitives;
 
 import java.util.NoSuchElementException;
+
 import net.ericaro.neoitertools.Generator;
 /** A simple Generator over a int array
  * 
  * @author eric
- *
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/IntegerGenerator">IntegerGenerator's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class IntegerGenerator implements Generator<Integer> {
 

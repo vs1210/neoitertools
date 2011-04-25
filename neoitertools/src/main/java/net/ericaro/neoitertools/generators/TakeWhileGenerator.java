@@ -1,6 +1,5 @@
 package net.ericaro.neoitertools.generators;
 
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import net.ericaro.neoitertools.Generator;
@@ -14,7 +13,8 @@ import net.ericaro.neoitertools.Lambda;
  * 
  * @author eric
  * 
- * @param <T>
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/TakeWhileGenerator">TakeWhileGenerator's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class TakeWhileGenerator<T> implements Generator<T> {
 

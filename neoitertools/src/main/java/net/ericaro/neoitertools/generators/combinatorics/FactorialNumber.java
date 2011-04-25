@@ -5,6 +5,9 @@ import java.util.NoSuchElementException;
 
 /**
  * A Factorial number is a big number where the ith digit must be in [0, i]. There are size! of them.
+ * 
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/FactorialNumber">FactorialNumber's wiki page</a>
+ * @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class FactorialNumber extends BigNumber {
 

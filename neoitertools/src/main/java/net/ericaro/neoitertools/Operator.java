@@ -1,11 +1,12 @@
 package net.ericaro.neoitertools;
 
 
-/** generic operator definition with T domain.
+/** generic operator definition within T domain.
  * 
  * @author eric
  *
- * @param <T>
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/Operator">Operator's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public interface Operator<T> {
 

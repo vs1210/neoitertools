@@ -9,11 +9,9 @@ import net.ericaro.neoitertools.Generator;
  * exhausted, then proceeds to the next generator, until all of the generators are
  * exhausted. 
  * 
- * 
- * <p></p>
- * @see <a href="http://code.google.com/p/neoitertools/wiki/ChainGenerator?show=content,sidebar">ChainGenerator's wiki</a>
- * @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  * @author eric
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/ChainGenerator">ChainGenerator's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  * 
  */
 public class ChainGenerator<T> implements Generator<T> {

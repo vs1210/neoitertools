@@ -5,6 +5,13 @@ import java.util.NoSuchElementException;
 import net.ericaro.neoitertools.Generator;
 import net.ericaro.neoitertools.Lambda;
 
+/** A {@link Generator} that apply a mapping {@link Lambda} function first.
+ * 
+ * @author eric
+ *
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/MapGenerator">MapGenerator's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
+ */
 public class MapGenerator<T,K> implements Generator<K> {
 
 	Generator<T> source;

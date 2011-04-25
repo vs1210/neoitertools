@@ -1,8 +1,10 @@
 package net.ericaro.neoitertools;
 
 
-/** A simple Immutable couple of two types.
- * 
+/** A simple Immutable pair of two types.
+ * @author eric
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/Pair">Pair's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class Pair<T0, T1> {
 

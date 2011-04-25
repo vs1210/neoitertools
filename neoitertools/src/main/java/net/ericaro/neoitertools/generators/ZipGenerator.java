@@ -4,13 +4,11 @@ import static net.ericaro.neoitertools.Itertools.iter;
 import static net.ericaro.neoitertools.Itertools.list;
 import static net.ericaro.neoitertools.Itertools.map;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import net.ericaro.neoitertools.Generator;
 import net.ericaro.neoitertools.Lambda;
-import net.ericaro.neoitertools.Pair;
 
 /**
  * an {@link Generator} of Pairs, where the i-th couple contains the i-th
@@ -21,6 +19,8 @@ import net.ericaro.neoitertools.Pair;
  * of Generator and at the same time provide mixed-type tuples.
  * 
  * @author eric
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/ZipGenerator">ZipGenerator's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a> 
  * 
  */
 public class ZipGenerator<T> implements Generator<List<T>> {

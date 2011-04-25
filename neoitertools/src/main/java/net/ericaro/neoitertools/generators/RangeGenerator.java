@@ -18,6 +18,9 @@ import net.ericaro.neoitertools.Generator;
  * Example:
  * 
  * @author eric
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/RangeGenerator">
+ *      RangeGenerator's wiki page</a>
+ * @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  * 
  */
 public class RangeGenerator implements Generator<Integer> {
@@ -30,7 +33,7 @@ public class RangeGenerator implements Generator<Integer> {
 	}
 
 	public RangeGenerator(int end) {
-		this(0,  end, 1);
+		this(0, end, 1);
 	}
 
 	public RangeGenerator(int start, int end, int step) {

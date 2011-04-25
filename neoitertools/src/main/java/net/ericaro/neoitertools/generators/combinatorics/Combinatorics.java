@@ -1,7 +1,6 @@
 package net.ericaro.neoitertools.generators.combinatorics;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import net.ericaro.neoitertools.Generator;
@@ -13,7 +12,8 @@ import net.ericaro.neoitertools.Generator;
  * The goal is to use those indices for higher level algorithm.
  * 
  * @author eric
- *
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/Combinatorics">Combinatorics's wiki page</a>
+ * @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class Combinatorics {
 

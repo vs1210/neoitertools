@@ -5,6 +5,17 @@ import java.util.NoSuchElementException;
 
 import net.ericaro.neoitertools.Yield;
 
+/** Yield protocol implementation class. A thread that :
+ * <ul>
+ * <li>handle the synchronization between the thread calling the next method, and this thread running the generator method</li>
+ * <li>stop itself when the generator is garbage collected</li>
+ * </ul>
+ * 
+ * @author eric
+ *
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/YieldThread">YieldThread's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
+ */
 public class YieldThread<U, V> extends Thread {
 
 	private V nextValue; // place to store in an out value for exchange between
