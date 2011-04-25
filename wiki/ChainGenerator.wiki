@@ -1,18 +1,6 @@
-#summary A generator that returns elements from the first generators until it is exhausted, then proceeds to the next generator, until all of the generators are exhausted.
+#summary ChainGenerator wiki
+#labels Javadoc-Wiki
 #sidebar TableOfContents
-= Introduction =
 
-Used for treating consecutive sequences as a single sequence.
+Leave a comment here to discuss issues about net.ericaro.neoitertools.generators.ChainGenerator
 
-= Equivalent To =
-
-In java, assuming YieldStatement : 
-
-{{{
-			public void generate() {
-				for( Generator<T> generator: in(generators) )
-					for( T t : in(generator) )
-						yield(t);
-			}
-
-}}}
