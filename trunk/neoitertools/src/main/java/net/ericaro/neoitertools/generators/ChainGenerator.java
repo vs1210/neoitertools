@@ -5,13 +5,14 @@ import java.util.NoSuchElementException;
 import net.ericaro.neoitertools.Generator;
 
 /**
- * Make an generator that returns elements from the first generators until it is
+ * A generator that returns elements from the first generators until it is
  * exhausted, then proceeds to the next generator, until all of the generators are
- * exhausted. Used for treating consecutive sequences as a single sequence.
+ * exhausted. 
  * 
- * We do not use varargs due to an inner flaw in varargs that make them
- * hard/impossible to combine with generics
  * 
+ * <p></p>
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/ChainGenerator?show=content,sidebar">ChainGenerator's wiki</a>
+ * @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  * @author eric
  * 
  */
