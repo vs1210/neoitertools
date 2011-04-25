@@ -107,7 +107,7 @@ Then, the body previously defined has a place to be:
 that procudes, as expected :
 {{{ [1, 1, 2, 3, 5, 8, 13, 21, 34, 55] }}}
 
-[http://code.google.com/p/neoitertools/source/browse/trunk/neoitertools/src/test/java/net/ericaro/neoitertools/generators/YieldTest.java read the full code].
+[http://code.google.com/p/neoitertools/source/browse/trunk/neoitertools/src/test/java/net/ericaro/neoitertools/YieldTest.java read the full code].
 
 == Advanced Features ==
 
