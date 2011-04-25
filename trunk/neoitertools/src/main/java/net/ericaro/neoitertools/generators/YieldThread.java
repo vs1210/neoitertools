@@ -1,9 +1,11 @@
-package net.ericaro.neoitertools.yield;
+package net.ericaro.neoitertools.generators;
 
 import java.lang.ref.WeakReference;
 import java.util.NoSuchElementException;
 
-class YieldThread<U, V> extends Thread {
+import net.ericaro.neoitertools.Yield;
+
+public class YieldThread<U, V> extends Thread {
 
 	private V nextValue; // place to store in an out value for exchange between
 	// threads
@@ -17,9 +19,9 @@ class YieldThread<U, V> extends Thread {
 	private boolean running = true;
 	private boolean started = false;
 	private WeakReference<Object> generatorReference;
-	private Generable<U, V> generable;
+	private Yield<U,V> generable;
 
-	public YieldThread(Object generator, Generable<U, V> generable) {
+	public YieldThread(Object generator, Yield<U, V> generable) {
 		super("yield-thread");
 		generatorReference = new WeakReference<Object>(generator); // a
 																			// weak
@@ -34,14 +36,12 @@ class YieldThread<U, V> extends Thread {
 		// no longer
 		// used
 		this.generable = generable;
-		generable.setYieldThread(this);
-
 	}
 
 	public void run() {
 		try {
 			started = true;
-			generable.generator();
+			generable.generate();
 
 		} finally {
 			synchronized (monitor) {
@@ -91,7 +91,7 @@ class YieldThread<U, V> extends Thread {
 	 * @param nextValue
 	 * @return
 	 */
-	U yield(V nextValue) {
+	public U yield(V nextValue) {
 
 		synchronized (monitor) {
 			// put the Out in its place

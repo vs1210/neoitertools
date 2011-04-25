@@ -15,6 +15,7 @@ import net.ericaro.neoitertools.generators.CycleGenerator;
 import net.ericaro.neoitertools.generators.DropWhileGenerator;
 import net.ericaro.neoitertools.generators.EnumerateGenerator;
 import net.ericaro.neoitertools.generators.FilterGenerator;
+import net.ericaro.neoitertools.generators.FullYieldGenerator;
 import net.ericaro.neoitertools.generators.GeneratorIterator;
 import net.ericaro.neoitertools.generators.GenericArrayGenerator;
 import net.ericaro.neoitertools.generators.GroupByGenerator;
@@ -22,9 +23,11 @@ import net.ericaro.neoitertools.generators.IteratorGenerator;
 import net.ericaro.neoitertools.generators.MapGenerator;
 import net.ericaro.neoitertools.generators.RangeGenerator;
 import net.ericaro.neoitertools.generators.RepeatGenerator;
+import net.ericaro.neoitertools.generators.SimpleYieldGenerator;
 import net.ericaro.neoitertools.generators.SliceGenerator;
 import net.ericaro.neoitertools.generators.TakeWhileGenerator;
 import net.ericaro.neoitertools.generators.TeeGeneratorFactory;
+import net.ericaro.neoitertools.generators.YieldThread;
 import net.ericaro.neoitertools.generators.ZipGenerator;
 import net.ericaro.neoitertools.generators.ZipPairGenerator;
 import net.ericaro.neoitertools.generators.combinatorics.Combinatorics;
@@ -160,7 +163,7 @@ public class Itertools {
 	 * @return
 	 */
 	public static Generator<Integer> count() {
-		return count(0);
+		return count(Integer.MAX_VALUE);
 	}
 
 	/**
@@ -170,7 +173,7 @@ public class Itertools {
 	 * @return
 	 */
 	public static Generator<Integer> count(final int n) {
-		return new RangeGenerator(0, 1, Integer.MAX_VALUE);
+		return new RangeGenerator(0, n );
 	}
 
 	/**
@@ -286,18 +289,164 @@ public class Itertools {
 		return new GroupByGenerator<K, T>(generator, key);
 	}
 
+	public static <T> Lambda<T, T> identity() {
+		return new Lambda<T, T>() {
+
+			public T map(T arg) {
+				return arg;
+			}
+
+		};
+	}
+
+	
+	public static <T> Iterable<T> in(final Generator<T> seq) {
+		return new Iterable<T>() {
+
+			public Iterator<T> iterator() {
+				return new GeneratorIterator<T>(seq);
+			}
+
+		};
+	}
+
+	/**
+	 * Turns any boolean[] array into a generator
+	 * 
+	 * @param array
+	 * @return a Generator over <code>array</code>
+	 */
+	public static Generator<Boolean> iter(boolean[] array) {
+		return new BooleanGenerator(array);
+	}
+
+	
+	/**
+	 * Turns any byte[] array into a generator
+	 * 
+	 * @param array
+	 * @return a Generator over <code>array</code>
+	 */
+	public static Generator<Byte> iter(byte[] array) {
+		return new ByteGenerator(array);
+	}
+
+	/**
+	 * Turns any char[] array into a generator
+	 * 
+	 * @param array
+	 * @return a Generator over <code>array</code>
+	 */
+	public static Generator<Character> iter(char[] array) {
+		return new CharacterGenerator(array);
+	}
+
+	/**
+	 * Turns a {@link CharSequence} into an {@link Generator}
+	 * 
+	 * @param seq
+	 *            any {@link CharSequence}
+	 * @return
+	 */
+	public static Generator<Character> iter(final CharSequence seq) {
+		return new CharSequenceGenerator(seq);
+
+	}
+
+	/**
+	 * Turns any double[] array into a generator
+	 * 
+	 * @param array
+	 * @return a Generator over <code>array</code>
+	 */
+	public static Generator<Double> iter(double[] array) {
+		return new DoubleGenerator(array);
+	}
+
+	/**
+	 * Turns any float[] array into a generator
+	 * 
+	 * @param array
+	 * @return a Generator over <code>array</code>
+	 */
+	public static Generator<Float> iter(float[] array) {
+		return new FloatGenerator(array);
+	}
+
+	/**
+	 * Turns any int[] array into a generator
+	 * 
+	 * @param array
+	 * @return a Generator over <code>array</code>
+	 */
+	public static Generator<Integer> iter(int[] array) {
+		return new IntegerGenerator(array);
+	}
+	
+	
+
+	/**
+	 * Turn any Iterable into a Generator
+	 * 
+	 * @param chars
+	 * @return
+	 */
+	public static <T> Generator<T> iter(Iterable<T> iterable) {
+		return iter(iterable.iterator());
+	}
+
+	/**
+	 * Turn any Generator into a Generator
+	 * 
+	 * @param chars
+	 * @return
+	 */
+	public static <T> Generator<T> iter(Iterator<T> iterator) {
+		return new IteratorGenerator<T>(iterator);
+	}
+
+	/**
+	 * Turns any long[] array into a generator
+	 * 
+	 * @param array
+	 * @return a Generator over <code>array</code>
+	 */
+	public static Generator<Long> iter(long[] array) {
+		return new LongGenerator(array);
+	}
+
+	/**
+	 * Turns any short[] array into a generator
+	 * 
+	 * @param array
+	 * @return a Generator over <code>array</code>
+	 */
+	public static Generator<Short> iter(short[] array) {
+		return new ShortGenerator(array);
+	}
+
 	/**
 	 * Turns any object array into an Generator
 	 * 
-	 * @param <T>
 	 * @param t
 	 * @return
 	 */
 	public static <T> Generator<T> iter(final T[] t) {
 		return new GenericArrayGenerator<T>(t);
 	}
-
 	
+	
+	/**
+	 * Turns a Yield generator into a standard Generator.
+	 * 
+	 * @param t
+	 * @return
+	 */
+	public static <T> Generator<T> iter(Yield<Void,T> yield) {
+		return new SimpleYieldGenerator<T>(yield);
+	}
+	
+
 	/**
 	 * creates a list from a generator
 	 * 
@@ -335,7 +484,6 @@ public class Itertools {
 		return list;
 	}
 
-	
 	/**
 	 * Apply {@link Lambda} to every item of <code>sequence</code> and return a
 	 * generaotr of the results.
@@ -476,8 +624,6 @@ public class Itertools {
 			final int step) throws InvalidParameterException {
 		return new RangeGenerator(start, end, step);
 	}
-	
-	
 
 	/**
 	 * equivalent to reduce(operator, generator, null);
@@ -538,20 +684,6 @@ public class Itertools {
 	}
 
 	/**
-	 * Return a reverse generator. The whole generator is stored, so be careful
-	 * when used.
-	 * 
-	 * @param <T>
-	 * @param generator
-	 * @return
-	 */
-	public static <T> Generator<T> reversed(Generator<T> generator) {
-		List<T> list = list(generator);
-		Collections.reverse(list);
-		return iter(list);
-	}
-
-	/**
 	 * Make an generator that returns object over and over again. Runs
 	 * indefinitely Used as argument to imap() for invariant function
 	 * parameters. Also used with izip() to create constant fields in a tuple
@@ -579,6 +711,20 @@ public class Itertools {
 	}
 
 	/**
+	 * Return a reverse generator. The whole generator is stored, so be careful
+	 * when used.
+	 * 
+	 * @param <T>
+	 * @param generator
+	 * @return
+	 */
+	public static <T> Generator<T> reversed(Generator<T> generator) {
+		List<T> list = list(generator);
+		Collections.reverse(list);
+		return iter(list);
+	}
+
+	/**
 	 * equivalent to {@link Generators#slice}(0, stop, 1);
 	 * 
 	 * @param <T>
@@ -591,6 +737,8 @@ public class Itertools {
 			final int stop) {
 		return new SliceGenerator<T>(generator, 0, stop, 1);
 	}
+
+	// TODO product
 
 	/**
 	 * equivalent to {@link Generators#slice}(start, stop, 1);
@@ -793,6 +941,19 @@ public class Itertools {
 	public static <T> List<T> tuple(Generator<T> generator) {
 		return Collections.unmodifiableList(list(generator));
 	}
+	
+	
+	/** causes the generate method to stop, and make the <code>t</code>value returned by the associated <code>next</code> method.
+	 *
+	 * 
+	 * 
+	 * 
+	 * @param t
+	 */
+	public static <R,T> R yield(T t){
+		YieldThread<R, T> thread =  (YieldThread<R, T>) Thread.currentThread();
+		return thread.yield(t);
+	}
 
 	/**
 	 * This function returns an {@link Generator} of tuple (unmodifiable List) ,
@@ -832,140 +993,6 @@ public class Itertools {
 			final Generator<T1> generator1, final Generator<T2> generator2) {
 
 		return new ZipPairGenerator<T1, T2>(generator1, generator2);
-	}
-
-	// TODO product
-
-	public static <T> Lambda<T, T> identity() {
-		return new Lambda<T, T>() {
-
-			public T map(T arg) {
-				return arg;
-			}
-
-		};
-	}
-
-	public static <T> Iterable<T> in(final Generator<T> seq) {
-		return new Iterable<T>() {
-
-			public Iterator<T> iterator() {
-				return new GeneratorIterator<T>(seq);
-			}
-
-		};
-	}
-
-	/**
-	 * Turns a {@link CharSequence} into an {@link Generator}
-	 * 
-	 * @param seq
-	 *            any {@link CharSequence}
-	 * @return
-	 */
-	public static Generator<Character> iter(final CharSequence seq) {
-		return new CharSequenceGenerator(seq);
-
-	}
-
-	/**
-	 * Turn any Iterable into a Generator
-	 * 
-	 * @param chars
-	 * @return
-	 */
-	public static <T> Generator<T> iter(Iterable<T> iterable) {
-		return iter(iterable.iterator());
-	}
-
-	/**
-	 * Turn any Generator into a Generator
-	 * 
-	 * @param chars
-	 * @return
-	 */
-	public static <T> Generator<T> iter(Iterator<T> iterator) {
-		return new IteratorGenerator<T>(iterator);
-	}
-
-	/**
-	 * Turns any byte[] array into a generator
-	 * 
-	 * @param array
-	 * @return a Generator over <code>array</code>
-	 */
-	public static Generator<Byte> iter(byte[] array) {
-		return new ByteGenerator(array);
-	}
-
-	/**
-	 * Turns any char[] array into a generator
-	 * 
-	 * @param array
-	 * @return a Generator over <code>array</code>
-	 */
-	public static Generator<Character> iter(char[] array) {
-		return new CharacterGenerator(array);
-	}
-
-	/**
-	 * Turns any short[] array into a generator
-	 * 
-	 * @param array
-	 * @return a Generator over <code>array</code>
-	 */
-	public static Generator<Short> iter(short[] array) {
-		return new ShortGenerator(array);
-	}
-
-	/**
-	 * Turns any int[] array into a generator
-	 * 
-	 * @param array
-	 * @return a Generator over <code>array</code>
-	 */
-	public static Generator<Integer> iter(int[] array) {
-		return new IntegerGenerator(array);
-	}
-
-	/**
-	 * Turns any long[] array into a generator
-	 * 
-	 * @param array
-	 * @return a Generator over <code>array</code>
-	 */
-	public static Generator<Long> iter(long[] array) {
-		return new LongGenerator(array);
-	}
-
-	/**
-	 * Turns any float[] array into a generator
-	 * 
-	 * @param array
-	 * @return a Generator over <code>array</code>
-	 */
-	public static Generator<Float> iter(float[] array) {
-		return new FloatGenerator(array);
-	}
-
-	/**
-	 * Turns any double[] array into a generator
-	 * 
-	 * @param array
-	 * @return a Generator over <code>array</code>
-	 */
-	public static Generator<Double> iter(double[] array) {
-		return new DoubleGenerator(array);
-	}
-
-	/**
-	 * Turns any boolean[] array into a generator
-	 * 
-	 * @param array
-	 * @return a Generator over <code>array</code>
-	 */
-	public static Generator<Boolean> iter(boolean[] array) {
-		return new BooleanGenerator(array);
 	}
 
 	
