@@ -2,7 +2,12 @@ package net.ericaro.neoitertools.generators.combinatorics;
 
 import java.util.NoSuchElementException;
 
-
+/** a big number that return all the permutation of all the subsets, therefore the name: sublist
+ * 
+ * @author eric
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/SubListNumber">SubListNumber's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
+ */
 public class SubListNumber extends BigNumber {
 
 	private CombinationNumber combinationNumbers;

@@ -1,6 +1,5 @@
 package net.ericaro.neoitertools.generators;
 
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import net.ericaro.neoitertools.Generator;
@@ -14,7 +13,8 @@ import net.ericaro.neoitertools.Generator;
  * 
  * @author eric
  * 
- * @param <T>
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/SliceGenerator">SliceGenerator's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class SliceGenerator<T> implements Generator<T> {
 	private final int step;

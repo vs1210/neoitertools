@@ -2,22 +2,24 @@ package net.ericaro.neoitertools;
 
 import java.util.NoSuchElementException;
 
-/** interface used to fit the generator concept of python.
- * 
- * It differs from the Iterator in that it has no "hasNext" method.
- * 
- * On the contrary, when the list is over the next method will throw a {@link NoSuchElementException}.
+/** When the sequence is exhausted the next method will throw a
+ * {@link NoSuchElementException}.
  * 
  * @author eric
- *
- * @param <T>
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/AboutGenerators">Python vs Java Iterator protocols</a>
+ * @see <a
+ *      href="http://code.google.com/p/neoitertools/wiki/Generator">Generator's
+ *      wiki page</a>
+ * @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public interface Generator<T> {
 
 	/**
 	 * 
-	 * @return the next item in the Generator.
-	 * @throws NoSuchElementException when the generator is empty. 
+	 * @return the next item in the sequence.
+	 * @throws NoSuchElementException
+	 *             when sequence is exhausted.
 	 */
 	public T next() throws NoSuchElementException;
+
 }

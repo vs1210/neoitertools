@@ -12,7 +12,8 @@ import net.ericaro.neoitertools.Pair;
  * of Generator and at the same time provide mixed-type tuples.
  * 
  * @author eric
- * 
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/ZipPairGenerator">ZipPairGenerator's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class ZipPairGenerator<T1, T2> implements Generator<Pair<T1, T2>> {
 	private final Generator<T1> generator1;

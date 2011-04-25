@@ -1,11 +1,13 @@
 package net.ericaro.neoitertools.generators.primitives;
 
 import java.util.NoSuchElementException;
+
 import net.ericaro.neoitertools.Generator;
 /** A simple Generator over a short array
  * 
  * @author eric
- *
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/ShortGenerator">ShortGenerator's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class ShortGenerator implements Generator<Short> {
 

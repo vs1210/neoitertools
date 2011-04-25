@@ -12,8 +12,8 @@ import net.ericaro.neoitertools.Generator;
  * Repeats indefinitely.
  * 
  * @author eric
- * 
- * @param <T>
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/CycleGenerator">CycleGenerator's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class CycleGenerator<T> implements Generator<T> {
 

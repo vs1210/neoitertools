@@ -4,7 +4,8 @@ package net.ericaro.neoitertools.generators.combinatorics;
 /** A big number whose values are all the permutations.
  * 
  * @author eric
- *
+ *@see <a href="http://code.google.com/p/neoitertools/wiki/PermutationNumber">PermutationNumber's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class PermutationNumber extends BigNumber {
 

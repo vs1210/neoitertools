@@ -8,9 +8,10 @@ import net.ericaro.neoitertools.Generator;
 
 /** A BigNumber is simply a number represented by a fixed collections of digits of size <code>size</code>.
  * it requires two abstract method : 
- * {@link BigNumber#inc()} to move to the next one. hasNext() to tell if it is the bigger one.
+ * {@link BigNumber#inc()} to move to the next one.
  *  
- * 
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/BigNumber">BigNumber's wiki page</a>
+ * @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  * @author eric
  *
  */

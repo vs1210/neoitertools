@@ -15,7 +15,6 @@ import net.ericaro.neoitertools.generators.CycleGenerator;
 import net.ericaro.neoitertools.generators.DropWhileGenerator;
 import net.ericaro.neoitertools.generators.EnumerateGenerator;
 import net.ericaro.neoitertools.generators.FilterGenerator;
-import net.ericaro.neoitertools.generators.FullYieldGenerator;
 import net.ericaro.neoitertools.generators.GeneratorIterator;
 import net.ericaro.neoitertools.generators.GenericArrayGenerator;
 import net.ericaro.neoitertools.generators.GroupByGenerator;
@@ -59,6 +58,10 @@ import net.ericaro.neoitertools.generators.primitives.ShortGenerator;
  * 
  * 
  * @author eric
+ * @see <a
+ *      href="http://code.google.com/p/neoitertools/wiki/Itertools">Itertools's
+ *      wiki page</a>
+ * @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  * 
  */
 public class Itertools {
@@ -130,7 +133,7 @@ public class Itertools {
 		List<Generator<T>> list = new LinkedList<Generator<T>>();
 		list.add(i1);
 		list.add(i2);
-		return chain(iter(list) );
+		return chain(iter(list));
 	}
 
 	/**
@@ -173,7 +176,7 @@ public class Itertools {
 	 * @return
 	 */
 	public static Generator<Integer> count(final int n) {
-		return new RangeGenerator(0, n );
+		return new RangeGenerator(0, n);
 	}
 
 	/**
@@ -200,7 +203,8 @@ public class Itertools {
 	 * @param predicate
 	 * @return
 	 */
-	public static <T> Generator<T> dropwhile(Lambda<T, Boolean> predicate, Generator<T> generator) {
+	public static <T> Generator<T> dropwhile(Lambda<T, Boolean> predicate,
+			Generator<T> generator) {
 		return new DropWhileGenerator<T>(predicate, generator);
 	}
 
@@ -242,7 +246,8 @@ public class Itertools {
 	 * @param generator
 	 * @return
 	 */
-	public static <T> Generator<T> filter(Lambda<T, Boolean> predicate,Generator<T> generator) {
+	public static <T> Generator<T> filter(Lambda<T, Boolean> predicate,
+			Generator<T> generator) {
 		return new FilterGenerator<T>(predicate, generator);
 	}
 
@@ -299,7 +304,6 @@ public class Itertools {
 		};
 	}
 
-	
 	public static <T> Iterable<T> in(final Generator<T> seq) {
 		return new Iterable<T>() {
 
@@ -320,7 +324,6 @@ public class Itertools {
 		return new BooleanGenerator(array);
 	}
 
-	
 	/**
 	 * Turns any byte[] array into a generator
 	 * 
@@ -382,8 +385,6 @@ public class Itertools {
 	public static Generator<Integer> iter(int[] array) {
 		return new IntegerGenerator(array);
 	}
-	
-	
 
 	/**
 	 * Turn any Iterable into a Generator
@@ -434,18 +435,16 @@ public class Itertools {
 	public static <T> Generator<T> iter(final T[] t) {
 		return new GenericArrayGenerator<T>(t);
 	}
-	
-	
+
 	/**
 	 * Turns a Yield generator into a standard Generator.
 	 * 
 	 * @param t
 	 * @return
 	 */
-	public static <T> Generator<T> iter(Yield<Void,T> yield) {
+	public static <T> Generator<T> iter(Yield<Void, T> yield) {
 		return new SimpleYieldGenerator<T>(yield);
 	}
-	
 
 	/**
 	 * creates a list from a generator
@@ -670,16 +669,19 @@ public class Itertools {
 	 */
 	public static <T> T reduce(Operator<T> operator, Generator<T> generator,
 			T initializer) {
-		
+
 		try {
 			if (initializer == null)
 				initializer = generator.next();
-		} catch (NoSuchElementException e) {return initializer;	}
-		
+		} catch (NoSuchElementException e) {
+			return initializer;
+		}
+
 		try {
 			while (true)
 				initializer = operator.operate(initializer, generator.next());
-		} catch (NoSuchElementException e) {}
+		} catch (NoSuchElementException e) {
+		}
 		return initializer;
 	}
 
@@ -896,7 +898,8 @@ public class Itertools {
 		try {
 			while (true)
 				sb.append(chars.next().charValue());
-		} catch (NoSuchElementException e) {}
+		} catch (NoSuchElementException e) {
+		}
 		return sb;
 	}
 
@@ -911,7 +914,7 @@ public class Itertools {
 	 */
 	public static <T> Generator<T> takewhile(final Generator<T> generator,
 			final Lambda<T, Boolean> predicate) {
-		return new TakeWhileGenerator<T>(predicate,generator);
+		return new TakeWhileGenerator<T>(predicate, generator);
 	}
 
 	/**
@@ -927,7 +930,7 @@ public class Itertools {
 		// create the generator provider
 		List<Generator<T>> list = new ArrayList<Generator<T>>(n);
 		TeeGeneratorFactory<T> factory = new TeeGeneratorFactory<T>(generator);
-		for(int i=0;i<n;i++)
+		for (int i = 0; i < n; i++)
 			list.add(factory.newInstance());
 		return list;
 	}
@@ -941,17 +944,18 @@ public class Itertools {
 	public static <T> List<T> tuple(Generator<T> generator) {
 		return Collections.unmodifiableList(list(generator));
 	}
-	
-	
-	/** causes the generate method to stop, and make the <code>t</code>value returned by the associated <code>next</code> method.
-	 *
+
+	/**
+	 * causes the generate method to stop, and make the <code>t</code>value
+	 * returned by the associated <code>next</code> method.
+	 * 
 	 * 
 	 * 
 	 * 
 	 * @param t
 	 */
-	public static <R,T> R yield(T t){
-		YieldThread<R, T> thread =  (YieldThread<R, T>) Thread.currentThread();
+	public static <R, T> R yield(T t) {
+		YieldThread<R, T> thread = (YieldThread<R, T>) Thread.currentThread();
 		return thread.yield(t);
 	}
 
@@ -994,10 +998,5 @@ public class Itertools {
 
 		return new ZipPairGenerator<T1, T2>(generator1, generator2);
 	}
-
-	
-	
-
-	
 
 }

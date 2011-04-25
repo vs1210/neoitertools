@@ -1,11 +1,13 @@
 package net.ericaro.neoitertools.generators.primitives;
 
 import java.util.NoSuchElementException;
+
 import net.ericaro.neoitertools.Generator;
 /** A simple Generator over a double array
  * 
  * @author eric
- *
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/DoubleGenerator">DoubleGenerator's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class DoubleGenerator implements Generator<Double> {
 

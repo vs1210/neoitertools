@@ -5,6 +5,14 @@ import java.util.NoSuchElementException;
 import net.ericaro.neoitertools.Generator;
 import net.ericaro.neoitertools.Lambda;
 
+/** Returns items from the generator iif the condition is true.
+ * 
+ *  Note that the condition passed can be negated.
+ * 
+ * @author eric
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/FilterGenerator">FilterGenerator's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
+ */
 public class FilterGenerator<T> implements Generator<T> {
 
 	private final Generator<T> source;

@@ -3,6 +3,8 @@
 
 import string
 
+
+
 iterator_template = string.Template("""package net.ericaro.neoitertools.generators.primitives;
 
 import java.util.NoSuchElementException;
@@ -58,18 +60,41 @@ types = [
 ("boolean"	, "Boolean"   ),
 ]
 
-calls = []
+def gen_primitives():
+	"""generate primitive array Generator"""
+	calls = []
+	for type, Type in types:
+		calls.append( call_template.substitute(type=type, Type=Type) )
+		with open('src/main/java/net/ericaro/neoitertools/generators/primitives/'+Type+'Generator.java', 'w') as f:
+			print "generating ", Type
+			print >>f, iterator_template.substitute(type=type, Type=Type)
 
-for type, Type in types:
-	calls.append( call_template.substitute(type=type, Type=Type) )
-	with open('src/main/java/net/ericaro/neoitertools/generators/primitives/'+Type+'Generator.java', 'w') as f:
-		print "generating ", Type
-		print >>f, iterator_template.substitute(type=type, Type=Type)
-
-for call in calls:
-	print call
+	for call in calls:
+		print call
 
 
+import os
+print "parsing"
+os.chdir('src/main/java')
+srcfile=[]
+for root, dirs, files in os.walk("."):
+    print root, dirs, files
+    srcfile+=[ (root[2:].replace("/",'.'),f[0:-5]) for f in files if f.endswith(".java") ]
 
+# move to target of wiki
+os.chdir('../../../../neoitertools-wiki')
+
+wiki_template = string.Template("""#summary $type wiki
+#labels Javadoc-Wiki
+#sidebar TableOfContents
+
+Leave a comment here to discuss issues about $package.$type
+""")
+
+for package, type in srcfile:
+		print package, type
+		with open(type+'.wiki', 'w') as f:
+			print "generating wiki ", type
+			print >>f, wiki_template.substitute(type=type, package = package)
 
 

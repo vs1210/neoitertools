@@ -1,11 +1,13 @@
 package net.ericaro.neoitertools.generators.primitives;
 
 import java.util.NoSuchElementException;
+
 import net.ericaro.neoitertools.Generator;
 /** A simple Generator over a long array
  * 
  * @author eric
- *
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/LongGenerator">LongGenerator's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class LongGenerator implements Generator<Long> {
 

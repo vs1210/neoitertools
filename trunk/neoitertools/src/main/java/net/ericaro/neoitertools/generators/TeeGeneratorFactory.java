@@ -5,6 +5,13 @@ import java.util.LinkedList;
 
 import net.ericaro.neoitertools.Generator;
 
+/** Creates n independent iterators from a single source sequence.
+ * 
+ * @author eric
+ *
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/TeeGeneratorFactory">TeeGeneratorFactory's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
+ */
 public class TeeGeneratorFactory<T>  {
 
 	public class TeeGenerator implements Generator<T> {

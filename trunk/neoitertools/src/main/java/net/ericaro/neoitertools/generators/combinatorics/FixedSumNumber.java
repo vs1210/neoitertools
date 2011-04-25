@@ -7,7 +7,9 @@ import java.util.NoSuchElementException;
  * 
  * There are combination(total, size) of them (what a coincidence ;-) ). Digits can be seen as the distance between two
  * successive indices on a combination.
- * 
+ * @author eric
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/FixedSumNumber">FixedSumNumber's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class FixedSumNumber extends BigNumber {
 

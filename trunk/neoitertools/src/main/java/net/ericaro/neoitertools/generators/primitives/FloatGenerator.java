@@ -1,11 +1,13 @@
 package net.ericaro.neoitertools.generators.primitives;
 
 import java.util.NoSuchElementException;
+
 import net.ericaro.neoitertools.Generator;
 /** A simple Generator over a float array
  * 
  * @author eric
- *
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/FloatGenerator">FloatGenerator's wiki page</a>
+* @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  */
 public class FloatGenerator implements Generator<Float> {
 
