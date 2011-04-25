@@ -1,7 +1,6 @@
-
- * [AboutGenerators About Generator]
+ * [AboutGenerators About Generators]
  * [YieldStatement Yield Statement]
+ * [DesignNotes Design Notes]
 <wiki:comment>
  * [GettingStarted Getting Started]
- * [DesignNotes Design Notes]
 </wiki:comment>
