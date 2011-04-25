@@ -1,0 +1,16 @@
+#summary Big Picture design notes
+
+= Structure =
+
+neoitertools is based on Top level interfaces and classes, lying in the top level package net.ericaro.neoitertools:
+
+  * Protocol definition interface: interfaces that are used to define a [AboutGenerators protocol] for iterators.
+    * [Generator Generator] : define the simplest generator protocol shared between java and python
+    * YieldGenerator : defines the python generator protocol. But it can be used to implements java Iterators or Iterable
+    * [Lambda Lambda] : the way to implement a lambda statement. until java7 and the promised Functor, it's the only way to do.
+    * [Operator Operator] : operator ( like in reduce)
+    * [Yield Yield] : to implement generator based on the [YieldStatement yield statement]
+  * Immutable classes used as helper in interface definitions
+    * [Index Index] : java way to handle enumerate
+    * [Pair Pair]  : a 2-tuple with mixed types.
+  * 
