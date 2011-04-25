@@ -1,6 +1,5 @@
 
- * All available Generators
-    * ChainGenerator
+ * [AboutGenerators About Generator]
  * [YieldStatement Yield Statement]
 <wiki:comment>
  * [GettingStarted Getting Started]
