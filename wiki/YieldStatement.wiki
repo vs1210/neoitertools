@@ -1,4 +1,5 @@
 #summary Python Yield statement support explained
+#sidebar TableOfContents
 
 Python has a very very nice [http://docs.python.org/reference/simple_stmts.html#grammar-token-yield_stmt yield statement].
 
