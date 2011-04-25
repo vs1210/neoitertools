@@ -6,7 +6,7 @@ Used for treating consecutive sequences as a single sequence.
 
 = Equivalent To =
 
-In java, using Yield statement support: 
+In java, assuming YieldStatement : 
 
 {{{
 			public void generate() {
