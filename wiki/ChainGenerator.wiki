@@ -1,13 +1,18 @@
-#summary One-sentence summary of this page.
+#summary A generator that returns elements from the first generators until it is exhausted, then proceeds to the next generator, until all of the generators are exhausted.
 #sidebar TableOfContents
 = Introduction =
 
-wiki test for integration with javadoc, keep tuned
+Used for treating consecutive sequences as a single sequence.
 
+= Equivalent To =
 
-= Details =
+In java, using Yield statement support: 
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+{{{
+			public void generate() {
+				for( Generator<T> generator: in(generators) )
+					for( T t : in(generator) )
+						yield(t);
+			}
+
+}}}
