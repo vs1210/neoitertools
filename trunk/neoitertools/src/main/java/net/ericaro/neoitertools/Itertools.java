@@ -13,6 +13,7 @@ import net.ericaro.neoitertools.generators.ChainGenerator;
 import net.ericaro.neoitertools.generators.CharSequenceGenerator;
 import net.ericaro.neoitertools.generators.CycleGenerator;
 import net.ericaro.neoitertools.generators.DropWhileGenerator;
+import net.ericaro.neoitertools.generators.EmptyGenerator;
 import net.ericaro.neoitertools.generators.EnumerateGenerator;
 import net.ericaro.neoitertools.generators.FilterGenerator;
 import net.ericaro.neoitertools.generators.GeneratorIterator;
@@ -541,6 +542,41 @@ public class Itertools {
 				Combinatorics.sublists(list.size(), r));
 	}
 
+	/** Cartesian product of input sequences.
+	 * 
+	 * @param generators a generator of Generators
+	 * @param repeat
+	 * @return
+	 */
+	public static <T> Generator<List<T>> product( Generator<Generator<T>> generators){
+		return product(generators, 1);
+	}
+		/** Cartesian product of input sequences.
+		 * 	<p>repeat simulate the repetition of the input sequence.
+		 * 
+		 * @param generators a generator of Generators
+		 * @param repeat
+		 * @return
+		 */
+		public static <T> Generator<List<T>> product( Generator<Generator<T>> generators, int repeat){
+		if (repeat == 0) return new EmptyGenerator<List<T>>();
+		List<List<T>> list = new LinkedList<List<T>>();
+		// store all values (required for a product
+		for(Generator<T> g : in( generators) ) list.add( list(g));
+		
+		// generate length array: length = len(lists) 
+		//[ len( lists[i%length]) for i in range( length ) ]
+		// or for more fun
+		// map( len, list*repeat )
+		// note that I don't use neoitertools to implement it to avoid bug propagations
+		// and that I should also provide a bunch of Lambda object for every function in itertools (and more (like len )
+		
+		int[] lengths = new int[list.size()*repeat];
+		for (int i = 0; i < lengths.length; i++) lengths[i] = list.get(i%list.size()).size();
+		
+		return Combinatorics.selected(list, Combinatorics.product( lengths));
+	}
+	
 	/**
 	 * equivalent to
 	 * 
@@ -740,7 +776,6 @@ public class Itertools {
 		return new SliceGenerator<T>(generator, 0, stop, 1);
 	}
 
-	// TODO product
 
 	/**
 	 * equivalent to {@link Generators#slice}(start, stop, 1);
@@ -981,7 +1016,7 @@ public class Itertools {
 	}
 
 	/**
-	 * This function returns an {@link Generator} of Couples, where the i-th
+	 * This function returns an {@link Generator} of {@link Pair}s, where the i-th
 	 * couple contains the i-th element from each of the argument generators.
 	 * The returned generator is truncated in length to the length of the
 	 * shortest argument sequence.
