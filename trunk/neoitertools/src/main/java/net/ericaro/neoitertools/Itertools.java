@@ -1017,7 +1017,7 @@ public class Itertools {
 
 	/**
 	 * This function returns an {@link Generator} of {@link Pair}s, where the i-th
-	 * couple contains the i-th element from each of the argument generators.
+	 * pair contains the i-th element from each of the argument generators.
 	 * The returned generator is truncated in length to the length of the
 	 * shortest argument sequence.
 	 * 
