@@ -17,7 +17,6 @@ public class MapGeneratorTest {
 	public void testMapGenerator() {
 		List<Integer> xlist = Arrays.asList(0,1,4,9,16);
 		List<Integer> list = list( map(new Lambda<Integer, Integer>(){
-
 			public Integer map(Integer arg) {
 				return arg*arg;
 			}}, range(5)));

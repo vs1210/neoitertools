@@ -20,7 +20,7 @@ public class Combinatorics {
 	
 	
 	/**
-	 * Calculate permutations and giving the indexes
+	 * Calculate all permutations' indexes
 	 * @param n
 	 * @return an Generator containing indexes
 	 */
@@ -32,7 +32,7 @@ public class Combinatorics {
 	
 	
 	/**
-	 * Calculate subsets (combinations) and giving the indexes
+	 * Calculate all subsets' indexes
 	 * @param m larger size
 	 * @param n size of the subsets
 	 * @return an Generator for the indexes
@@ -44,7 +44,7 @@ public class Combinatorics {
 	
 	
 	/**
-	 * Calculate sublists (arrangements) and giving the indexes
+	 * Calculate sublists' indexes
 	 * @param m larger size
 	 * @param n size of the sublists
 	 * @return an Generator containing the indexes
