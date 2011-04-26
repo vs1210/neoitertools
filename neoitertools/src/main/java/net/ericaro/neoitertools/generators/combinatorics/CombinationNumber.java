@@ -14,6 +14,9 @@ public class CombinationNumber extends BigNumber {
 	public CombinationNumber(int total, int size) {
 		super(size);
 		fixedSum = new FixedSumNumber(total, size);
+		try {
+			inc();
+		} catch (Exception e) {}
 	}
 
 	protected void inc() {
