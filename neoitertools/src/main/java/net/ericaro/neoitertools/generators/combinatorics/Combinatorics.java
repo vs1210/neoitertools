@@ -20,22 +20,30 @@ public class Combinatorics {
 	
 	
 	/**
-	 * Calculate all permutations' indexes
+	 * Calculate all permutations' indices
 	 * @param n
-	 * @return an Generator containing indexes
+	 * @return an Generator containing indices
 	 */
 	public static Generator<int[]> permutations(final int n) {
 		return new PermutationNumber(n);
 	}
 
-	
+
+	/** Calculate all product selectors' indices
+	 * 
+	 * @param lengths
+	 * @return
+	 */
+	public static Generator<int[]> product(int[] lengths) {
+		return new VarBaseNumber(lengths);
+	}
 	
 	
 	/**
-	 * Calculate all subsets' indexes
+	 * Calculate all subsets' indices
 	 * @param m larger size
 	 * @param n size of the subsets
-	 * @return an Generator for the indexes
+	 * @return an Generator for the indices
 	 */
 	public static Generator<int[]> combinations(final int m, final int n) {
 		return new CombinationNumber(m, n);
@@ -67,7 +75,47 @@ public class Combinatorics {
 		return items;
 	}
 	
-	/** Return an Iterator over a list of applied transformation ( @see {@link Combinatorics#apply(List, int[])} . 
+	/** Select on item per list, based on its index read in indices.
+	 * lets define:
+	 * <p>size : len( lists )
+	 * <p>sizes[i] = len( lists[i] )  
+	 * <p>then :
+	 * <p>if len(indices) > size then indices[i] is associated with lists[i%size]
+	 * <p>and 
+	 * <p>indices[i] in [0 , sizes[i] &nbsp; [
+	 * 
+	 *  
+	 * 
+	 * @param lists
+	 * @param indices 
+	 * @return list of length size, with T values
+	 */
+	public static <T> List<T> select(List<List<T>> lists, int[] indices){
+		int size = lists.size();
+		List<T> items = new ArrayList<T>(indices.length);
+		for (int i=0;i<indices.length;i++)
+			items.add(lists.get(i%size).get(indices[i])  );
+		return items;
+	}
+	
+	
+	
+	
+	/** Return an Generator over a list of selection ( @see {@link Combinatorics#select(List, int[])} . 
+	 * @param elements
+	 * @param indicesGenerator
+	 * @return
+	 */
+	public static <T> Generator<List<T>> selected(final List<List<T>> lists, 	final Generator<int[]> indicesGenerator) {
+		
+		return new Generator<List<T>>() {
+			public List<T> next() {
+				return select(lists, indicesGenerator.next());
+			}
+		};
+	}
+
+	/** Return a Generator over a list of applied transformation ( @see {@link Combinatorics#apply(List, int[])} . 
 	 * @param elements
 	 * @param indicesGenerator
 	 * @return
