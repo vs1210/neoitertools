@@ -100,7 +100,6 @@ public class YieldThread<U, V> extends Thread {
 	 * this method returns the input parameter of the <code>next</code> method.
 	 * 
 	 * @param nextValue
-	 * @return
 	 */
 	public U yield(V nextValue) {
 

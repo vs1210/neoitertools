@@ -12,7 +12,7 @@ import net.ericaro.neoitertools.Yield;
 
 import org.junit.Test;
 
-public class SimpleYieldGeneratorTest {
+public class YieldGeneratorTest {
 
 	@Test
 	public void testSimpleYieldGenerator() {
