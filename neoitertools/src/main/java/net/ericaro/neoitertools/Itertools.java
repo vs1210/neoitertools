@@ -171,7 +171,7 @@ public class Itertools {
 	 * @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
 	 */
 	public static Generator<Integer> count() {
-		return count(Integer.MAX_VALUE);
+		return count(0);
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class Itertools {
 	 * @see <a href="http://code.google.com/p/neoitertools/"> neoitertools site</a>
 	 */
 	public static Generator<Integer> count(final int n) {
-		return new RangeGenerator(0, n);
+		return new RangeGenerator(n, Integer.MAX_VALUE);
 	}
 
 	/**
@@ -320,9 +320,12 @@ public class Itertools {
 		return new GroupByGenerator<K, T>(generator, key);
 	}
 
+	/** Return the identity Lambda function.
+	 * 
+	 * @param <T> any type
+	 */
 	public static <T> Lambda<T, T> identity() {
 		return new Lambda<T, T>() {
-
 			public T map(T arg) {
 				return arg;
 			}
