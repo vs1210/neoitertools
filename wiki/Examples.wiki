@@ -1,4 +1,5 @@
 #summary A bunch of example of neoitertools syntax
+#labels Featured
 
 {{{
 >>> count();
