@@ -9,18 +9,18 @@ import net.ericaro.neoitertools.Yield;
  * 
  * @author eric
  * @see <a href="http://code.google.com/p/neoitertools/wiki/AboutGenerators">About Python vs Java Iterator Protocols.</a>
- * @see <a href="http://code.google.com/p/neoitertools/wiki/SimpleYieldGenerator">SimpleYieldGenerator's wiki page</a>
+ * @see <a href="http://code.google.com/p/neoitertools/wiki/YieldGenerator">YieldGenerator's wiki page</a>
 * @see <a href="http://code.google.com/p/neoitertools/">neoitertools site</a>
  *
  */
-public class SimpleYieldGenerator<T> implements Generator<T>{
+public class YieldGenerator<T> implements Generator<T>{
 
 	
 	private YieldThread<?, T> engine;
 
 	
 	
-	public SimpleYieldGenerator(Yield<Void, T> function ) {
+	public YieldGenerator(Yield<Void, T> function ) {
 		engine = new YieldThread<Void, T>(this, function) ;
 	}
 

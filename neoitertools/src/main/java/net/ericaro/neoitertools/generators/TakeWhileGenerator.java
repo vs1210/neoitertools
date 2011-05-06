@@ -19,7 +19,7 @@ import net.ericaro.neoitertools.Lambda;
 public class TakeWhileGenerator<T> implements Generator<T> {
 
 	private Generator<T> iterator;
-	private Lambda<T,Boolean> predicate;
+	private Lambda<? super T,Boolean> predicate;
 
 	/**
 	 * Make an iterator that returns elements from the iterator as long as the
@@ -28,7 +28,7 @@ public class TakeWhileGenerator<T> implements Generator<T> {
 	 * @param iterator
 	 * @param predicate
 	 */
-	public TakeWhileGenerator(Lambda<T, Boolean> predicate,Generator<T> iterator) {
+	public TakeWhileGenerator(Lambda<? super T, Boolean> predicate,Generator<T> iterator) {
 		this.iterator = iterator;
 		this.predicate = predicate;
 	}

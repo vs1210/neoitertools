@@ -15,8 +15,8 @@ import net.ericaro.neoitertools.Lambda;
 public class MapGenerator<T,K> implements Generator<K> {
 
 	Generator<T> source;
-	Lambda<T,K> map;
-	public MapGenerator(Lambda<T, K> map, Generator<T> source) {
+	Lambda<? super T,K> map;
+	public MapGenerator(Lambda<? super T, K> map, Generator<T> source) {
 		super();
 		this.map = map;
 		this.source = source;

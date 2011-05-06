@@ -32,7 +32,6 @@ public class Combinatorics {
 	/** Calculate all product selectors' indices
 	 * 
 	 * @param lengths
-	 * @return
 	 */
 	public static Generator<int[]> product(int[] lengths) {
 		return new VarBaseNumber(lengths);
@@ -66,7 +65,6 @@ public class Combinatorics {
 	 * @param <T>
 	 * @param origin
 	 * @param indices
-	 * @return
 	 */
 	public static <T> List<T> apply(List<T> origin, int[] indices){
 		List<T> items = new ArrayList<T>(indices.length);
@@ -102,9 +100,8 @@ public class Combinatorics {
 	
 	
 	/** Return an Generator over a list of selection ( @see {@link Combinatorics#select(List, int[])} . 
-	 * @param elements
+	 * @param lists
 	 * @param indicesGenerator
-	 * @return
 	 */
 	public static <T> Generator<List<T>> selected(final List<List<T>> lists, 	final Generator<int[]> indicesGenerator) {
 		
