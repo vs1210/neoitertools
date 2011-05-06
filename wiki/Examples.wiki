@@ -1,11 +1,12 @@
 #summary A bunch of example of neoitertools syntax
 #labels Featured
 
-{{{
+Here are almost pure java examples. Every statement after the >>> is a pure java statement, that can produce the given results.
+
+read the [http://code.google.com/p/neoitertools/source/browse/trunk/neoitertools/src/test/java/net/ericaro/neoitertools/ItertoolsTest.java actual working source code].
+
 >>> count();
 0 , 1 , 2 , 3 , 4 , ...
-}}}
-{{{
 >>> all(range(0, 10, 2);
 true
 >>> any(range(0, 10);
@@ -33,11 +34,10 @@ A , B , C , D , A , B , C , D , ...
 >>> map(key, groupby(iter("AAABBBCCDAABBB"), id))
 A , B , C , D , A , B , ...
 >>> for(int i : in(range(3)))
-...			System.out.println("3");
+...			System.out.println("i");
 0
 1
 2
-[true, false]
 [1, 2]
 >>> for(Character c: in( iter("ABCD")))
 ...		System.out.println(c);
@@ -81,6 +81,3 @@ A , B , C , D , E , ...
 1 -> B
 2 -> C
 3 -> D
-
-
-}}}
