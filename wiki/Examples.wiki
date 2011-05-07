@@ -1,5 +1,6 @@
 #summary A bunch of example of neoitertools syntax
 #labels Featured
+#sidebar TableOfContents
 
 Here are almost pure java examples. Every statement after the >>> is a pure java statement, that can produce the given results.
 
